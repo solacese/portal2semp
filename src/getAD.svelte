@@ -1,5 +1,4 @@
 <script>
-  import 'getAD.css';
   let name = 'world';
   let token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFJQUVBQUFBV3pnQUFBQUFBQUFBQUFBQUFBQUFBQUN3UUFNPSIsImFwaVRva2VuSWQiOiIxYTJudnNmMDZ3NWQiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MDgxMzkwNDd9.I9tX7C3vPgpjVo0rvra2-7J9eeSeYaDMA592BaQDmYU7V0vn9Zzij5hV-WgooTN49I6IhlZRCuXoIgLtN5fJQqs6dmf1luHh0piHeAsGGfQ-yuqB6m-hdTDe9hSXfrJW9QQZUZWbjPF4PBIJ5pmcAgsMEgW7OkzdMN2yW8M8R3WtY0HZENTQTvyuoZ1yOTAdDTGwgVt73eik2Eg34D8Q42Q_f0fJJUicIPdTuGZjyD5PK9-g8U32BQda13w-PtaiU7BAuZWA-Jds18huroATej_skkEP9yMlmg-F_WnETWBCaRUG28SkfUwdGt-TIYL5gZpUBmTZegKH1iMkVogVEA";
   let portalUrl = "https://solace.cloud/api/v1/eventPortal/";
@@ -9,16 +8,21 @@
   let appDomains = [];
   function processApplicationDomains(data) {
     data.data.forEach(appObj => {
-      let obj = { [appObj.name]: appObj.id};
       appDomains = [...appDomains, { name: appObj.name, id: appObj.id}];
     });
-    console.log(appDomains);
     return data;
+  }
+  function addSelectedAppDomain(appDomain) {
+    if (selectedApps.filter(data => (data.name === appDomain.name)).length === 0) { 
+      selectedApps = [...selectedApps, appDomain];
+    }
+  }
+  function removeSelectedAppDomain(appDomain) {
+    selectedApps = selectedApps.filter(data => data.name!=appDomain.name);
   }
   const handleClick = () => {
     appDomains.length = 0;
     let url = portalUrl + applicationDomainSuffix;
-    console.log("Url: ", url);
     promise = fetch(
         url,
         {
@@ -94,19 +98,15 @@ Getting data
 <!-- promise was fulfilled -->
 <div style="float:left">
 {#each appDomains as app}
-<label>
-  <input type=checkbox bind:group={selectedApps} value={app.name}> {app.name}
-</label>
+  <li on:click={() => addSelectedAppDomain(app)}>{app.name}</li>
 {/each}
 </div>
 
 {#if selectedApps.length > 0}
   <div style="float:right">
-    <li>
       {#each selectedApps as showApp}
-        <li>{showApp}</li>
+        <li on:click={() => removeSelectedAppDomain(showApp)}>{showApp.name}</li>
       {/each}
-    </li>
   </div>
 {/if}
 {:catch error}
