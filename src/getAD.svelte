@@ -1,29 +1,58 @@
 <script>
+  import { fade } from 'svelte/transition';
+
   let name = 'world';
   let token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFJQUVBQUFBV3pnQUFBQUFBQUFBQUFBQUFBQUFBQUN3UUFNPSIsImFwaVRva2VuSWQiOiIxYTJudnNmMDZ3NWQiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MDgxMzkwNDd9.I9tX7C3vPgpjVo0rvra2-7J9eeSeYaDMA592BaQDmYU7V0vn9Zzij5hV-WgooTN49I6IhlZRCuXoIgLtN5fJQqs6dmf1luHh0piHeAsGGfQ-yuqB6m-hdTDe9hSXfrJW9QQZUZWbjPF4PBIJ5pmcAgsMEgW7OkzdMN2yW8M8R3WtY0HZENTQTvyuoZ1yOTAdDTGwgVt73eik2Eg34D8Q42Q_f0fJJUicIPdTuGZjyD5PK9-g8U32BQda13w-PtaiU7BAuZWA-Jds18huroATej_skkEP9yMlmg-F_WnETWBCaRUG28SkfUwdGt-TIYL5gZpUBmTZegKH1iMkVogVEA";
   let portalUrl = "https://solace.cloud/api/v1/eventPortal/";
   let applicationDomainSuffix = "applicationDomains";
-  let promise;
+  let applicationDomainName = "TF-sample-EP-to-runtime";
+  let allAppDomains;
   let selectedApps = [];
   let appDomains = [];
+  let gotDomains = false;
+  let displayConfig = true;
+  let contractButtonLabel = ">";
+  let gotAD = "block";
+
   function processApplicationDomains(data) {
     data.data.forEach(appObj => {
       appDomains = [...appDomains, { name: appObj.name, id: appObj.id}];
     });
+    gotDomains = true;
+    displayConfig = !displayConfig;
     return data;
   }
+
   function addSelectedAppDomain(appDomain) {
     if (selectedApps.filter(data => (data.name === appDomain.name)).length === 0) { 
       selectedApps = [...selectedApps, appDomain];
     }
   }
+
   function removeSelectedAppDomain(appDomain) {
     selectedApps = selectedApps.filter(data => data.name!=appDomain.name);
   }
-  const handleClick = () => {
+
+  const hideConfig = () => {
+    if (displayConfig === true) { 
+      displayConfig = false;
+      contractButtonLabel = "^";
+      return; 
+    }
+    displayConfig = true;
+    contractButtonLabel = ">";
+  }
+
+  const getNamedDomains = () => {
+    selectedApps.length = 0;
+    let url = portalUrl + applicationDomainSuffix + "?name=" + applicationDomainName;
+    console.log("Url: ", url);
+    gotAD = "none";
+  }
+  const getDomains = () => {
     appDomains.length = 0;
     let url = portalUrl + applicationDomainSuffix;
-    promise = fetch(
+    allAppDomains = fetch(
         url,
         {
           headers: {
@@ -46,7 +75,7 @@ li {
   cursor: pointer;
   position: relative;
   left: 0;
-  background-color: #EEE;
+  background-color: #e6ffe6;
   margin: .5em;
   padding: .3em 0;
   height: 1.0em;
@@ -54,7 +83,7 @@ li {
 }
 li:hover {
   color: #607D8B;
-  background-color: #DDD;
+  background-color: #99ff99;
   left: .1em;
 }
 li.selected {
@@ -65,34 +94,63 @@ li.selected:hover {
   background-color: #BBD8DC;
   color: white;
 }
-badge {
-  display: inline-block;
-  font-size: small;
-  color: white;
-  padding: 0.8em 0.7em 0 0.7em;
-  background-color:#405061;
-  line-height: 1em;
-  position: relative;
-  left: -1px;
-  top: -4px;
-  height: 1.8em;
-  margin-right: .8em;
-  border-radius: 4px 0 0 4px;
+label {
+  text-align: right;
+  clear: both;
+  float: left;
+  margin-right: 15px;
+}
+input {
+  float: right;
 }
 </style>
 
-
-<div>
-<label for="url">Event Portal URL:</label>
-<input bind:value={portalUrl}>
-
-<button on:click="{handleClick}">
-  Click to Load Data
-</button>
+<div id="getAD" style="width:100%;display:{gotAD}">
+<div style="width:100%">
+<p>Stage 1: Select your Application Domain.</p>Instructions:
+<ol>
+<li>Check the Event Portal URL is correct and enter your access token
+<li>If you have a name for the Application Domain of interest, enter them and click "Get Named Domain"
+<li>Otherwise, click "Get Application Domains".  You'll be presented with a list of Application Domains.  Click on those you're interested in and they'll be added to the list on the right.  If you change your mind, just click on an item in the selected list and it will be deselected.
+</ol>
 </div>
+<hr>
 
-{#await promise}
-<!-- optionally show something while promise is pending -->
+{#if displayConfig}
+<div style="width:100%" transition:fade>
+<table>
+<tr>
+<td><label for="url">Event Portal URL:</label>
+<td> <input bind:value={portalUrl} name="url">
+<td>
+<td><label for="appDomId">Application Domain Name:</label>
+<td><input bind:value={applicationDomainName} name="appDomId">
+</tr>
+<tr>
+<td><label for="token">Access token:</label>
+<td><input bind:value={token} name="token">
+<td align=center width=10%>OR
+</tr>
+<tr>
+<td> <button on:click="{getDomains}">
+  Get All Application Domains
+</button>
+<td>
+<td>
+<td> <button on:click="{getNamedDomains}">Get Named Application Domain</button>
+<td> {applicationDomainName} </td>
+</table>
+</div>
+{/if}
+
+{#if gotDomains === true}
+<button on:click="{hideConfig}">
+{contractButtonLabel}
+</button>
+<hr>
+{/if}
+
+{#await allAppDomains}
 Getting data
 {:then data}
 <!-- promise was fulfilled -->
@@ -105,7 +163,7 @@ Getting data
 {#if selectedApps.length > 0}
   <div style="float:right">
       {#each selectedApps as showApp}
-        <li on:click={() => removeSelectedAppDomain(showApp)}>{showApp.name}</li>
+        <li transition:fade on:click={() => removeSelectedAppDomain(showApp)}>{showApp.name}</li>
       {/each}
   </div>
 {/if}
@@ -113,3 +171,4 @@ Getting data
 <!-- optionally show something while promise was rejected -->
 <p>Error: ${error.message}</p>
 {/await}
+</div>

@@ -1,6 +1,5 @@
 <script>
   import  Get from './getAD.svelte';
-  let val = "url"
 </script>
 
 <h1> Portal 2 Semp </h1>
