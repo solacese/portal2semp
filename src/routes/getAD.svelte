@@ -1,5 +1,6 @@
 <script>
   import { fade } from 'svelte/transition';
+  import { storeAD } from '../stores.js';
 
   let token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFJQUVBQUFBV3pnQUFBQUFBQUFBQUFBQUFBQUFBQUN3UUFNPSIsImFwaVRva2VuSWQiOiIxYTJudnNmMDZ3NWQiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MDgxMzkwNDd9.I9tX7C3vPgpjVo0rvra2-7J9eeSeYaDMA592BaQDmYU7V0vn9Zzij5hV-WgooTN49I6IhlZRCuXoIgLtN5fJQqs6dmf1luHh0piHeAsGGfQ-yuqB6m-hdTDe9hSXfrJW9QQZUZWbjPF4PBIJ5pmcAgsMEgW7OkzdMN2yW8M8R3WtY0HZENTQTvyuoZ1yOTAdDTGwgVt73eik2Eg34D8Q42Q_f0fJJUicIPdTuGZjyD5PK9-g8U32BQda13w-PtaiU7BAuZWA-Jds18huroATej_skkEP9yMlmg-F_WnETWBCaRUG28SkfUwdGt-TIYL5gZpUBmTZegKH1iMkVogVEA";
   let portalUrl = "https://solace.cloud/api/v1/eventPortal/";
@@ -13,6 +14,10 @@
   let contractButtonLabel = ">";
   let gotAD = "block";
 
+  const unsubscribe = storeAD.subscribe(value => {
+    selectedApps = value;
+  });
+
   const processApplicationDomains = (data) => {
     data.data.forEach(appObj => {
       appDomains = [...appDomains, { name: appObj.name, id: appObj.id}];
@@ -24,7 +29,7 @@
 
   const addSelectedAppDomain = (appDomain) => {
     if (selectedApps.filter(data => (data.name === appDomain.name)).length === 0) { 
-      selectedApps = [...selectedApps, appDomain];
+      storeAD.update(selectedApps => [...selectedApps, appDomain]);
     }
   }
 
@@ -40,6 +45,7 @@
 
   const getNamedDomains = () => {
     selectedApps.length = 0;
+    storeAD.set([]);
     let url = portalUrl + applicationDomainSuffix + "?name=" + applicationDomainName;
     console.log("Url: ", url);
     gotAD = "none";
@@ -162,7 +168,7 @@ Getting data
 {#if selectedApps.length > 0}
   <div style="float:right">
       {#each selectedApps as showApp}
-        <li transition:fade on:click={() => { selectedApps = selectedApps.filter(data => data.name!=showApp.name)} }>{showApp.name}</li>
+        <li transition:fade on:click={() => { storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name)) } }>{showApp.name}</li>
       {/each}
   </div>
 {/if}
