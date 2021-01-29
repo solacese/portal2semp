@@ -1,3 +1,4 @@
+<div style="width:100%">
 <h1>Instructions</h1>
 
 <p>Introduction</p>
@@ -9,3 +10,4 @@
 <p>Click the "1. Get Application Domains" Navigation button to start entering details of Event Portal and selecting Application Domains and Applications</p>
 
 <p>Then just follow the stages in the navigation bar one by one.</p>
+</div>

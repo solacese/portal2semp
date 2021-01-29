@@ -106,20 +106,7 @@
 </script>
 
 <style>
-div {
-  margin: 0 0 2em 0;
-  list-style-type: none;
-  padding: 0;
-  width: 15em;
-}
-li.plain {
-  background-color: #ffffff;
-}
-li.plain:hover {
-  color: #000000;
-  background-color: #ffffff;
-}
-li {
+li.select {
   cursor: pointer;
   position: relative;
   left: 0;
@@ -129,31 +116,21 @@ li {
   height: 1.0em;
   border-radius: 4px;
 }
-li:hover {
+li.select:hover {
   color: #607D8B;
   background-color: #99ff99;
   left: .1em;
 }
-label {
-  text-align: right;
-  clear: both;
-  float: left;
-  margin-right: 15px;
-}
-input {
-  float: right;
-}
 </style>
-
 
 <div id="getAD" style="width:100%;display:{gotAD}">
 <div style="width:100%">
 <p>Stage 1: Select your Application Domain.</p>Instructions:
 <ol>
-<li class="plain">Check the Event Portal URL is correct and enter your access token
-<li class="plain">If you have a name for the Application Domain of interest, enter them and click "Get Named Domain"
-<li class="plain">Otherwise, click "Get Application Domains".  You'll be presented with a list of Application Domains.  Click on those you're interested in and they'll be added to the list on the right.  If you change your mind, just click on an item in the selected list and it will be deselected.
-<li class="plain">Then just click the next state of the process on the Navigation bar: 2. Applications.
+<li>Check the Event Portal URL is correct and enter your access token
+<li>If you have a name for the Application Domain of interest, enter them and click "Get Named Domain"
+<li>Otherwise, click "Get Application Domains".  You'll be presented with a list of Application Domains.  Click on those you're interested in and they'll be added to the list on the right.  If you change your mind, just click on an item in the selected list and it will be deselected.
+<li>Then just click the next state of the process on the Navigation bar: 2. Applications.
 </ol>
 </div>
 <hr>
@@ -208,6 +185,7 @@ Getting data
 <div style="float:left">
 {#each appDomains as app}
   <li 
+    class="select"
     on:click={() => addSelectedAppDomain(app)}
     on:mouseover = { () => { displayAdDescrition(app) } }
     on:mouseout  = { () => { removeAdDescription() } }
@@ -227,6 +205,7 @@ Getting data
   <div style="float:right">
       {#each selectedApps as showApp}
         <li 
+          class="select"
 	  transition:fade 
 	  on:click = { () => { storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
 	    hovering = false; } }

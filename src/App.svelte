@@ -7,6 +7,45 @@
   export let url = "";
 </script>
 
+<style>
+div {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+}
+li.plain {
+  background-color: #ffffff;
+}
+li.plain:hover {
+  color: #000000;
+  background-color: #ffffff;
+}
+li.select {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: #e6ffe6;
+  margin: .5em;
+  padding: .3em 0;
+  height: 1.0em;
+  border-radius: 4px;
+}
+li.select:hover {
+  color: #607D8B;
+  background-color: #99ff99;
+  left: .1em;
+}
+label.select {
+  text-align: right;
+  clear: both;
+  float: left;
+  margin-right: 15px;
+}
+input {
+  float: right;
+}
+</style>
+
 <header>
 <title>Portal 2 Semp</title>
 </header>
