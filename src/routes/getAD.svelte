@@ -41,8 +41,8 @@
   const processApplicationDomains = (data) => {
     data.data.forEach(appObj => {
       storePossAD.update(appDomains => [...appDomains, { name: appObj.name, 
-      id: appObj.id, 
-      description: appObj.description}]);
+        id: appObj.id, 
+        description: appObj.description}]);
     });
     gotDomains = true;
     displayConfig = !displayConfig;
