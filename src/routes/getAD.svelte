@@ -3,9 +3,11 @@
   import { storeAD } from '../stores.js';
   import { storePossAD } from '../stores.js';
 
-  let token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFJQUVBQUFBV3pnQUFBQUFBQUFBQUFBQUFBQUFBQUN3UUFNPSIsImFwaVRva2VuSWQiOiIxYTJudnNmMDZ3NWQiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MDgxMzkwNDd9.I9tX7C3vPgpjVo0rvra2-7J9eeSeYaDMA592BaQDmYU7V0vn9Zzij5hV-WgooTN49I6IhlZRCuXoIgLtN5fJQqs6dmf1luHh0piHeAsGGfQ-yuqB6m-hdTDe9hSXfrJW9QQZUZWbjPF4PBIJ5pmcAgsMEgW7OkzdMN2yW8M8R3WtY0HZENTQTvyuoZ1yOTAdDTGwgVt73eik2Eg34D8Q42Q_f0fJJUicIPdTuGZjyD5PK9-g8U32BQda13w-PtaiU7BAuZWA-Jds18huroATej_skkEP9yMlmg-F_WnETWBCaRUG28SkfUwdGt-TIYL5gZpUBmTZegKH1iMkVogVEA";
-  let portalUrl = "https://solace.cloud/api/v1/eventPortal/";
-  let applicationDomainSuffix = "applicationDomains";
+  let config = {
+    token: "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFJQUVBQUFBV3pnQUFBQUFBQUFBQUFBQUFBQUFBQUN3UUFNPSIsImFwaVRva2VuSWQiOiIxYTJudnNmMDZ3NWQiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MDgxMzkwNDd9.I9tX7C3vPgpjVo0rvra2-7J9eeSeYaDMA592BaQDmYU7V0vn9Zzij5hV-WgooTN49I6IhlZRCuXoIgLtN5fJQqs6dmf1luHh0piHeAsGGfQ-yuqB6m-hdTDe9hSXfrJW9QQZUZWbjPF4PBIJ5pmcAgsMEgW7OkzdMN2yW8M8R3WtY0HZENTQTvyuoZ1yOTAdDTGwgVt73eik2Eg34D8Q42Q_f0fJJUicIPdTuGZjyD5PK9-g8U32BQda13w-PtaiU7BAuZWA-Jds18huroATej_skkEP9yMlmg-F_WnETWBCaRUG28SkfUwdGt-TIYL5gZpUBmTZegKH1iMkVogVEA",
+    portalUrl: "https://solace.cloud/api/v1/eventPortal/", 
+    applicationDomainSuffix: "applicationDomains",
+  }
   let applicationDomainName = "TF-sample-EP-to-runtime";
   let allAppDomains;
   let selectedApps = [];
@@ -51,19 +53,19 @@
   const getNamedDomains = () => {
     selectedApps.length = 0;
     storeAD.set([]);
-    let url = portalUrl + applicationDomainSuffix + "?name=" + applicationDomainName;
+    let url = config.portalUrl + config.applicationDomainSuffix + "?name=" + config.applicationDomainName;
     console.log("Url: ", url);
     gotAD = "none";
   }
 
   const getDomains = () => {
     appDomains.length = 0;
-    let url = portalUrl + applicationDomainSuffix;
+    let url = config.portalUrl + config.applicationDomainSuffix;
     allAppDomains = fetch(
         url,
         {
           headers: {
-            Authorization: token
+            Authorization: config.token
           } 
         }
     ).then((x) => x.json())
@@ -132,14 +134,14 @@ input {
 <table>
 <tr>
 <td><label for="url">Event Portal URL:</label>
-<td> <input bind:value={portalUrl} name="url">
+<td> <input bind:value={config.portalUrl} name="url">
 <td>
 <td><label for="appDomId">Application Domain Name:</label>
-<td><input bind:value={applicationDomainName} name="appDomId">
+<td><input bind:value={config.applicationDomainName} name="appDomId">
 </tr>
 <tr>
 <td><label for="token">Access token:</label>
-<td><input bind:value={token} name="token">
+<td><input bind:value={config.token} name="token">
 <td align=center width=10%>OR
 </tr>
 <tr>
@@ -149,7 +151,7 @@ input {
 <td>
 <td>
 <td> <button on:click="{getNamedDomains}">Get Named Application Domain</button>
-<td> {applicationDomainName} </td>
+<td> {config.applicationDomainName} </td>
 </table>
 </div>
 {/if}
