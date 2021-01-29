@@ -17,6 +17,8 @@
   let displayConfig = true;
   let contractButtonLabel = ">";
   let gotAD = "block";
+  let hovering = false;
+  let description = "";
 
   const unsubscribeSelectedAD = storeAD.subscribe(value => {
     selectedApps = value;
@@ -25,10 +27,22 @@
   const unsubscribeAllAD = storePossAD.subscribe(value => {
     appDomains = value;
   });
+  
+
+  const displayAdDescrition = ( appDomain) => {
+    hovering = true;
+    description = appDomain.description; 
+  }
+
+  const removeAdDescription = () => {
+    hovering = false;
+  }
 
   const processApplicationDomains = (data) => {
     data.data.forEach(appObj => {
-      storePossAD.update(appDomains => [...appDomains, { name: appObj.name, id: appObj.id}]);
+      storePossAD.update(appDomains => [...appDomains, { name: appObj.name, 
+      id: appObj.id, 
+      description: appObj.description}]);
     });
     gotDomains = true;
     displayConfig = !displayConfig;
@@ -40,7 +54,10 @@
       // TO DO: error processing, should only get 1 named domain back
       return;
     }
-    storePossAD.update(appDomains => [{name: data.data[0].name, id: data.data[0].id}]);
+    storePossAD.update(appDomains => [ {
+      name: data.data[0].name, 
+      id: data.data[0].id, 
+      description: data.data[0].description} ] );
   }
 
   const addSelectedAppDomain = (appDomain) => {
@@ -190,14 +207,34 @@ Getting data
 <!-- promise was fulfilled -->
 <div style="float:left">
 {#each appDomains as app}
-  <li on:click={() => addSelectedAppDomain(app)}>{app.name}</li>
+  <li 
+    on:click={() => addSelectedAppDomain(app)}
+    on:mouseover = { () => { displayAdDescrition(app) } }
+    on:mouseout  = { () => { removeAdDescription() } }
+    >
+    {app.name}
+  </li>
 {/each}
 </div>
+
+{#if hovering}
+<div style="float:left">
+<p transition:fade>Description: {@html description}</p>
+</div>
+{/if}
 
 {#if selectedApps.length > 0}
   <div style="float:right">
       {#each selectedApps as showApp}
-        <li transition:fade on:click={() => { storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name)) } }>{showApp.name}</li>
+        <li 
+	  transition:fade 
+	  on:click = { () => { storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
+	    hovering = false; } }
+	  on:mouseover = { () => { displayAdDescrition(showApp) } }
+	  on:mouseout  = { () => { removeAdDescription() } }
+	>
+	  {showApp.name}
+	</li>
       {/each}
   </div>
 {/if}
