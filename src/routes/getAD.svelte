@@ -7,9 +7,10 @@
     token: "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFJQUVBQUFBV3pnQUFBQUFBQUFBQUFBQUFBQUFBQUN3UUFNPSIsImFwaVRva2VuSWQiOiIxYTJudnNmMDZ3NWQiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MDgxMzkwNDd9.I9tX7C3vPgpjVo0rvra2-7J9eeSeYaDMA592BaQDmYU7V0vn9Zzij5hV-WgooTN49I6IhlZRCuXoIgLtN5fJQqs6dmf1luHh0piHeAsGGfQ-yuqB6m-hdTDe9hSXfrJW9QQZUZWbjPF4PBIJ5pmcAgsMEgW7OkzdMN2yW8M8R3WtY0HZENTQTvyuoZ1yOTAdDTGwgVt73eik2Eg34D8Q42Q_f0fJJUicIPdTuGZjyD5PK9-g8U32BQda13w-PtaiU7BAuZWA-Jds18huroATej_skkEP9yMlmg-F_WnETWBCaRUG28SkfUwdGt-TIYL5gZpUBmTZegKH1iMkVogVEA",
     portalUrl: "https://solace.cloud/api/v1/eventPortal/", 
     applicationDomainSuffix: "applicationDomains",
+    applicationDomainName: "TF-sample-EP-to-runtime"
   }
-  let applicationDomainName = "TF-sample-EP-to-runtime";
   let allAppDomains;
+  let namedDomainData;
   let selectedApps = [];
   let appDomains = [];
   let gotDomains = false;
@@ -34,6 +35,14 @@
     return data;
   }
 
+  const processNamedAppDomain = (data) => {
+    if (data.data.length !== 1) {
+      // TO DO: error processing, should only get 1 named domain back
+      return;
+    }
+    storePossAD.update(appDomains => [{name: data.data[0].name, id: data.data[0].id}]);
+  }
+
   const addSelectedAppDomain = (appDomain) => {
     if (selectedApps.filter(data => (data.name === appDomain.name)).length === 0) { 
       storeAD.update(selectedApps => [...selectedApps, appDomain]);
@@ -52,10 +61,16 @@
 
   const getNamedDomains = () => {
     selectedApps.length = 0;
-    storeAD.set([]);
     let url = config.portalUrl + config.applicationDomainSuffix + "?name=" + config.applicationDomainName;
-    console.log("Url: ", url);
-    gotAD = "none";
+    namedDomainData = fetch(
+      url,
+      {
+        headers: {
+	  Authorization: config.token
+	}
+      }
+    ).then((x) => x.json())
+     .then((y) => processNamedAppDomain(y));
   }
 
   const getDomains = () => {
@@ -83,6 +98,10 @@ div {
 li.plain {
   background-color: #ffffff;
 }
+li.plain:hover {
+  color: #000000;
+  background-color: #ffffff;
+}
 li {
   cursor: pointer;
   position: relative;
@@ -97,14 +116,6 @@ li:hover {
   color: #607D8B;
   background-color: #99ff99;
   left: .1em;
-}
-li.selected {
-  background-color: #CFD8DC;
-  color: white;
-}
-li.selected:hover {
-  background-color: #BBD8DC;
-  color: white;
 }
 label {
   text-align: right;
@@ -125,6 +136,7 @@ input {
 <li class="plain">Check the Event Portal URL is correct and enter your access token
 <li class="plain">If you have a name for the Application Domain of interest, enter them and click "Get Named Domain"
 <li class="plain">Otherwise, click "Get Application Domains".  You'll be presented with a list of Application Domains.  Click on those you're interested in and they'll be added to the list on the right.  If you change your mind, just click on an item in the selected list and it will be deselected.
+<li class="plain">Then just click the next state of the process on the Navigation bar: 2. Applications.
 </ol>
 </div>
 <hr>
@@ -162,6 +174,15 @@ input {
 </button>
 <hr>
 {/if}
+
+{#await namedDomainData}
+Getting Data
+{:then}
+{:catch error}
+<!-- optionally show something while promise was rejected -->
+<p>Error: ${error.message}</p>
+{/await}
+
 
 {#await allAppDomains}
 Getting data
