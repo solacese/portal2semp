@@ -38,13 +38,17 @@
       name: "TF-sample-EP-to-runtime",
       id: "1a2mpvr5zuwb"
     } ];
-    getData();
+    dataGot();
+  }
+
+  const dataGot = async() => {
+    storeAppInfo.update(data => []);
+    gotApps = await getData();
   }
 
   const getData = async() => {
     await getApps();
     appInfo.forEach( app => {
-      let persistent = false;
       app.tagIds.forEach ( tagId => {
         let cacheLine = tagIdCache.filter(x => (x.id === tagId));
 	if (cacheLine[0].persistent === true) {
@@ -106,22 +110,6 @@
     });
   }
 
-  const processApplications = async(data) => {
-    tagData = await Promise.all( data.data.map( 
-      appObj => { 
-	if ( appObj.consumedEventIds.length > 0 ) {
-	  let url = config.portalUrl + '/applications/' + appObj.id + '/tags';
-	  fetch(
-	    url,
-	    { headers: { Authorization: config.token } }
-	  ).then( (x) => x.json(x))
-	   .then( (y) => waiting() );
-	}
-      }
-    ) );
-  }
-
-
   const displayAppDescrition = ( app ) => {
     hovering = true;
     description = app.description;
@@ -136,7 +124,6 @@
       storeApp.update(selectedApps => [...selectedApps, app]);
     }
   }
-
 
   const getTagDetails = async() => {
     // Go through tag cache and get all the tag details.
@@ -200,7 +187,7 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 
 {#if selectedDomains.length > 0 }
   <div style="float:left">
-    <button on:click="{getApps}">Get Applications</button>
+    <button on:click="{dataGot}">Get Applications</button>
     {#if selectedDomains.length === 1}
       <h2>Selected Domain</h2>
     {:else}
@@ -221,7 +208,7 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 {:then}
 {/await}
 
-{#await tagDetailData}
+{#await gotApps}
 Getting Data
 {:then}
 <div style="float:left">
