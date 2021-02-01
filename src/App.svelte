@@ -4,6 +4,7 @@
   import Instructions from "./routes/Instructions.svelte";
   import GetAD from './routes/getAD.svelte';
   import GetApps from './routes/getApps.svelte';
+  import GetEvents from './routes/getEvents.svelte';
   export let url = "";
 </script>
 
@@ -56,11 +57,13 @@ input {
   <NavLink to="/">Instructions</NavLink>
   <NavLink to="getAD">1. Application Domains</NavLink>
   <NavLink to="getApps">2. Applications</NavLink>
+  <NavLink to="getEvents">3. Events</NavLink>
 <hr>
 </nav>
 <div>
   <Route path="/" component="{Instructions}" />
   <Route path="getAD" component="{GetAD}" />
   <Route path="getApps" component="{GetApps}" />
+  <Route path="getEvents" component="{GetEvents}" />
 </div>
 </Router>
