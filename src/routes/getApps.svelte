@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { Link } from "svelte-routing";
   import { storeAppInfo, storeAD, storeApp } from '../stores.js';
@@ -143,6 +144,8 @@
     }
   }
 
+  onMount( async() => { dataGot(); } );
+
 </script>
 
 <style>
@@ -187,7 +190,6 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 
 {#if selectedDomains.length > 0 }
   <div style="float:left">
-    <button on:click="{dataGot}">Get Applications</button>
     {#if selectedDomains.length === 1}
       <h2>Selected Domain</h2>
     {:else}
