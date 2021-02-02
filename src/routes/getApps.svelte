@@ -204,10 +204,6 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 <p>Please go back to the <Link to="getAD">previous step</Link> and pick at least one</p>
 {/if}
 
-{#await applicationData}
-{:then}
-{/await}
-
 {#await gotApps}
 Getting Data
 {:then}
