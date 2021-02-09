@@ -2,7 +2,8 @@
   import { fade } from 'svelte/transition';
   import { storeAD } from '../stores.js';
   import { storePossAD } from '../stores.js';
-  import { config } from '../config.js'
+  import { config } from '../config.js';
+  import List from '../components/List.svelte';
 
   let allAppDomains;
   let namedDomainData;
@@ -164,28 +165,21 @@ li.select:hover {
 <hr>
 {/if}
 
+<List promise = {allAppDomains} 
+      list = {appDomains} 
+      addFunc = {addSelectedAppDomain}
+      displayFunc = {displayAdDescrition}
+      removeFunc = {removeAdDescription} 
+      hovering = {hovering}
+      description = {description}
+> 
+</List>
+
+
 {#await allAppDomains}
 Getting data
 {:then data}
 <!-- promise was fulfilled -->
-<div style="float:left">
-{#each appDomains as app}
-  <li 
-    class="select"
-    on:click={() => addSelectedAppDomain(app)}
-    on:mouseover = { () => { displayAdDescrition(app) } }
-    on:mouseout  = { () => { removeAdDescription() } }
-    >
-    {app.name}
-  </li>
-{/each}
-</div>
-
-{#if hovering}
-<div style="float:left">
-<p transition:fade>Description: {@html description}</p>
-</div>
-{/if}
 
 {#if selectedApps.length > 0}
   <div style="float:right">

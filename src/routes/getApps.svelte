@@ -4,6 +4,7 @@
   import { Link } from "svelte-routing";
   import { storeAppInfo, storeAD, storeApp } from '../stores.js';
   import { config } from '../config.js';
+  import List from '../components/List.svelte';
 
   let selectedDomains = [];
   let appInfo = [];
@@ -202,28 +203,21 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 <p>Please go back to the <Link to="getAD">previous step</Link> and pick at least one</p>
 {/if}
 
-{#await gotApps}
-Getting Data
-{:then}
-<div style="float:left">
-<h2>Consumers</h2>
-{#each appInfo as app}
-  <li 
-    class="select"
-    on:mouseover = { () => { displayAppDescrition(app) } }
-    on:mouseout  = { () => { removeAppDescription() } }
-    on:click     = { () => { addApp(app) } }
-  >
-    {app.name}
-  </li>
-{/each}
-</div>
+<List promise = {gotApps}
+      list = {appInfo}
+      addFunc = {addApp}
+      displayFunc = {displayAppDescrition}
+      removeFunc = {removeAppDescription}
+      hovering = {hovering}
+      description = {description}
+>
+</List>
 
-<div style="float:left">
-{#if hovering}
-<p transition:fade>Description: {@html description}</p>
-{/if}
-</div>
+      
+
+{#await gotApps}
+
+{:then}
 
 {#if (selectedApps.length > 0) && (selectedDomains.length > 0)}
 <!-- TO DO: Fix width of description -->
