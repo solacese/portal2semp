@@ -164,15 +164,6 @@ li.select:hover {
 <hr>
 {/if}
 
-{#await namedDomainData}
-Getting Data
-{:then}
-{:catch error}
-<!-- optionally show something while promise was rejected -->
-<p>Error: ${error.message}</p>
-{/await}
-
-
 {#await allAppDomains}
 Getting data
 {:then data}
