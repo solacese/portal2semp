@@ -3,11 +3,7 @@
   import { storeApp, storePossEvents, storeEvents } from "../stores.js";
   import { Link } from "svelte-routing";
   import { fade } from 'svelte/transition';
-
-  let config = {
-    portalUrl: "https://solace.cloud/api/v1/eventPortal",
-    token: "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFJQUVBQUFBV3pnQUFBQUFBQUFBQUFBQUFBQUFBQUN3UUFNPSIsImFwaVRva2VuSWQiOiIxYTJudnNmMDZ3NWQiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MDgxMzkwNDd9.I9tX7C3vPgpjVo0rvra2-7J9eeSeYaDMA592BaQDmYU7V0vn9Zzij5hV-WgooTN49I6IhlZRCuXoIgLtN5fJQqs6dmf1luHh0piHeAsGGfQ-yuqB6m-hdTDe9hSXfrJW9QQZUZWbjPF4PBIJ5pmcAgsMEgW7OkzdMN2yW8M8R3WtY0HZENTQTvyuoZ1yOTAdDTGwgVt73eik2Eg34D8Q42Q_f0fJJUicIPdTuGZjyD5PK9-g8U32BQda13w-PtaiU7BAuZWA-Jds18huroATej_skkEP9yMlmg-F_WnETWBCaRUG28SkfUwdGt-TIYL5gZpUBmTZegKH1iMkVogVEA"
-  }
+  import { config } from '../config.js';
 
   let selectedApps = [];
   let eventIdList = [];
@@ -50,7 +46,7 @@
     eventData = await Promise.all(
       eventIdList.map(
         eventId => fetch(
-          config.portalUrl + '/events/' + eventId,
+          config.portalUrl + 'events/' + eventId,
 	  { headers: { Authorization: config.token } }
         ).then( (x) => x.json() )
          .then( async(y) => await processEvent(eventId, y) )
