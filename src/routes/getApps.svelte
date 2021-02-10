@@ -29,15 +29,15 @@
     appInfo = value;
   });
 
-  const test = () => {
-    console.log("TESTING");
-    selectedDomains = [ {
-      description: "a description",
-      name: "TF-sample-EP-to-runtime",
-      id: "1a2mpvr5zuwb"
-    } ];
-    dataGot();
-  }
+  //const test = () => {
+    //console.log("TESTING");
+    //selectedDomains = [ {
+      //description: "a description",
+      //name: "TF-sample-EP-to-runtime",
+      //id: "1a2mpvr5zuwb"
+    //} ];
+    //dataGot();
+  //}
 
   const dataGot = async() => {
     storeAppInfo.update(data => []);
@@ -141,6 +141,11 @@
     }
   }
 
+  const removeApp = (showApp) => {
+    storeApp.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
+    hovering = false; 
+  }
+
   onMount( async() => { dataGot(); } );
 
 </script>
@@ -182,11 +187,12 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 <p>Simply select those applications you'd like to deploy and continue to Stage 3.</p>
 <hr>
 
-<!-- TESTING -->
-    <button on:click="{test}">TEST</button>
+</div>
 
+<div style="float:left; width:100%">
+
+<div style="float:left">
 {#if selectedDomains.length > 0 }
-  <div style="float:left">
     {#if selectedDomains.length === 1}
       <h2>Selected Domain</h2>
     {:else}
@@ -195,7 +201,6 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
     {#each selectedDomains as showDomain}
       <li class="domain">{showDomain.name}</li>
     {/each}
-  </div>
 
 {:else}
   <p><strong>You haven't selected any Application Domains!</strong></p>
@@ -203,6 +208,9 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 <p>Please go back to the <Link to="getAD">previous step</Link> and pick at least one</p>
 {/if}
 
+</div>
+
+<div style="float:left">
 <List promise = {gotApps}
       list = {appInfo}
       addFunc = {addApp}
@@ -210,36 +218,23 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
       removeFunc = {removeAppDescription}
       hovering = {hovering}
       description = {description}
+      side = "left"
+      displayDescription = {true}
 >
 </List>
 
+<List promise = {gotApps}
+      list = {selectedApps}
+      addFunc = {removeApp}
+      displayFunc = {displayAppDescrition}
+      removeFunc = {removeAppDescription}
+      hovering = {hovering}
+      description = {description}
+      side = "right"
+      displayDescription = {false}
+>
+</List>
+</div>
       
 
-{#await gotApps}
-
-{:then}
-
-{#if (selectedApps.length > 0) && (selectedDomains.length > 0)}
-<!-- TO DO: Fix width of description -->
-  <div style="float:right">
-      {#each selectedApps as showApp}
-        <li
-          class="select"
-          transition:fade
-          on:click = { () => { storeApp.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
-            hovering = false; } }
-          on:mouseover = { () => { displayAppDescrition(showApp) } }
-          on:mouseout  = { () => { removeAppDescription() } }
-        >
-          {showApp.name}
-        </li>
-      {/each}
-  </div>
-{/if}
-
-{:catch error}
-<!-- optionally show something while promise was rejected -->
-<p>Error: ${error.message}</p>
-{/await}
 </div>
-

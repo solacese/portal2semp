@@ -99,6 +99,11 @@
     ).then((x) => x.json())
      .then((y) => processApplicationDomains(y));
   };
+
+  const removeApp = (showApp) => {
+    storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
+    hovering = false;
+  }
 </script>
 
 <style>
@@ -130,6 +135,7 @@ li.select:hover {
 </ol>
 </div>
 <hr>
+</div>
 
 {#if displayConfig}
 <div style="width:100%" transition:fade>
@@ -165,6 +171,8 @@ li.select:hover {
 <hr>
 {/if}
 
+<div style="float:left; width:100%">
+
 <List promise = {allAppDomains} 
       list = {appDomains} 
       addFunc = {addSelectedAppDomain}
@@ -172,33 +180,21 @@ li.select:hover {
       removeFunc = {removeAdDescription} 
       hovering = {hovering}
       description = {description}
+      side = "left"
+      displayDescription = {true}
 > 
 </List>
 
+<List promise = {allAppDomains}
+      list = {selectedApps}
+      addFunc = {removeApp}
+      displayFunc = {displayAdDescrition}
+      removeFunc = {removeAdDescription}
+      hovering = {hovering}
+      description = {description}
+      side = "right"
+      displayDescription = {false}
+>
+</List>
 
-{#await allAppDomains}
-Getting data
-{:then data}
-<!-- promise was fulfilled -->
-
-{#if selectedApps.length > 0}
-  <div style="float:right">
-      {#each selectedApps as showApp}
-        <li 
-          class="select"
-	  transition:fade 
-	  on:click = { () => { storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
-	    hovering = false; } }
-	  on:mouseover = { () => { displayAdDescrition(showApp) } }
-	  on:mouseout  = { () => { removeAdDescription() } }
-	>
-	  {showApp.name}
-	</li>
-      {/each}
-  </div>
-{/if}
-{:catch error}
-<!-- optionally show something while promise was rejected -->
-<p>Error: ${error.message}</p>
-{/await}
 </div>
