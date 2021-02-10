@@ -175,7 +175,7 @@ li.select:hover {
 
 <List promise = {allAppDomains} 
       list = {appDomains} 
-      addFunc = {addSelectedAppDomain}
+      clickFunc = {addSelectedAppDomain}
       displayFunc = {displayAdDescrition}
       removeFunc = {removeAdDescription} 
       hovering = {hovering}
@@ -187,7 +187,7 @@ li.select:hover {
 
 <List promise = {allAppDomains}
       list = {selectedApps}
-      addFunc = {removeApp}
+      clickFunc = {removeApp}
       displayFunc = {displayAdDescrition}
       removeFunc = {removeAdDescription}
       hovering = {hovering}

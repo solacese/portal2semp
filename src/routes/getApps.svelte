@@ -213,7 +213,7 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 <div style="float:left">
 <List promise = {gotApps}
       list = {appInfo}
-      addFunc = {addApp}
+      clickFunc = {addApp}
       displayFunc = {displayAppDescrition}
       removeFunc = {removeAppDescription}
       hovering = {hovering}
@@ -225,7 +225,7 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 
 <List promise = {gotApps}
       list = {selectedApps}
-      addFunc = {removeApp}
+      clickFunc = {removeApp}
       displayFunc = {displayAppDescrition}
       removeFunc = {removeAppDescription}
       hovering = {hovering}

@@ -3,7 +3,7 @@
 
   export let promise;
   export let list;
-  export let addFunc;
+  export let clickFunc;
   export let displayFunc;
   export let removeFunc;
   export let hovering;
@@ -40,7 +40,7 @@ li.select:hover {
 {#each list as element}
   <li
     class="select"
-    on:click={() => addFunc(element)}
+    on:click={ () => clickFunc(element) }
     on:mouseover = { () =>  displayFunc(element) }
     on:mouseout  = { () =>  removeFunc() }
     >
