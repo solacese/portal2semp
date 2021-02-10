@@ -67,7 +67,7 @@ li.event {
     {#each selectedEvents as event}
       <li
         class="event"
-      > {event.data.name}
+      > {event.name}
       </li>
     {/each}
   </div>

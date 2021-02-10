@@ -4,6 +4,7 @@
   import { Link } from "svelte-routing";
   import { fade } from 'svelte/transition';
   import { config } from '../config.js';
+  import List from '../components/List.svelte';
 
   let selectedApps = [];
   let eventIdList = [];
@@ -56,11 +57,11 @@
 
   const processEvent = async(eventId, event) => {
     if ( eventIdCache.filter( element => (element.id === eventId)).length === 0){
-      eventIdCache.push( {id: eventId, data: {
+      eventIdCache.push( {
         description: event.data.description,
         name: event.data.name,
-        topic: event.data.topicName
-        }
+        topic: event.data.topicName,
+	id: eventId
       } );
     }
   }
@@ -77,6 +78,8 @@
   }
 
   const addSelectedEvent = (event) => {
+    console.log("Got: ", selectedEvents);
+    console.log("Looking for: ", event);
     if (selectedEvents.filter(data => (data.id === event.id)).length === 0) {
       storeEvents.update( selectedEvents => [...selectedEvents, event] )
     }
@@ -84,7 +87,7 @@
 
   const displayEventDescription = (event) => {
     hovering = true;
-    description = event.data.description;
+    description = event.description;
   }
 
   const removeEventDescription = () => {
@@ -157,42 +160,31 @@ li.app {
   <p>Please go back to the <Link to="getApps">previous step</Link> and pick at least one.<p>
 {/if}
 
-{#await eventData}
-<p>Getting event data</p>
-{:then}
-  {#if eventIdCache.length > 0} 
-    <div style="float:left">
-    {#each eventIdCache as event}
-      <li 
-        class="select"
-	on:click = { () => addSelectedEvent(event) }
-	on:mouseover = { () => displayEventDescription(event) }
-	on:mouseout = { () => removeEventDescription() }
-	>{event.data.name}
-      </li>
-    {/each}
-    </div>
-  {/if}
-{:catch error}
-<p>Error getting event data: ${error.message}</p>
-{/await}
 
-{#if hovering}
 <div style="float:left">
-<p transition:fade>Description: {@html description}</p>
-</div>
-{/if}
+<List promise = {eventData}
+      list = {eventIdCache}
+      clickFunc = {addSelectedEvent}
+      displayFunc = {displayEventDescription}
+      removeFunc = {removeEventDescription}
+      hovering = {hovering}
+      description = {description}
+      side = "left"
+      displayDescription = {true}
+>
+</List>
 
-{#if selectedEvents.length > 0}
-  <div style="float:right">
-    {#each selectedEvents as event}
-      <li
-        class="select"
-	on:click = { () => removeSelectedEvent(event) }
-	on:mouseover = { () => displayEventDescription(event) }
-	on:mouseout = { () => removeEventDescription() }
-      > {event.data.name}
-      </li>
-    {/each}
-  </div>
-{/if}
+<List promise = {eventData}
+      list = {selectedEvents}
+      clickFunc = {removeSelectedEvent}
+      displayFunc = {displayEventDescription}
+      removeFunc = {removeEventDescription}
+      hovering = {hovering}
+      description = {description}
+      side = "right"
+      displayDescription = {false}
+>
+</List>
+
+</div>
+
