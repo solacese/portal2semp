@@ -11,8 +11,6 @@
   let eventIdCache = [];
   let eventData;
   let testList = [];
-  let hovering = false;
-  let description = "";
   let selectedEvents = [];
 
   const test = async() => {
@@ -83,15 +81,6 @@
     }
   }
 
-  const displayEventDescription = (event) => {
-    hovering = true;
-    description = event.description;
-  }
-
-  const removeEventDescription = () => {
-    hovering = false;
-  }
-  
   const removeSelectedEvent = (event) => {
     storeEvents.update( selectedEvents => selectedEvents.filter( 
       data => data.id != event.id
@@ -163,24 +152,18 @@ li.app {
 <List promise = {eventData}
       list = {eventIdCache}
       clickFunc = {addSelectedEvent}
-      displayFunc = {displayEventDescription}
-      removeFunc = {removeEventDescription}
-      hovering = {hovering}
-      description = {description}
       side = "left"
       displayDescription = {true}
+      title = "Available Events"
 >
 </List>
 
 <List promise = {eventData}
       list = {selectedEvents}
       clickFunc = {removeSelectedEvent}
-      displayFunc = {displayEventDescription}
-      removeFunc = {removeEventDescription}
-      hovering = {hovering}
-      description = {description}
       side = "right"
       displayDescription = {false}
+      title = "Selected Events"
 >
 </List>
 

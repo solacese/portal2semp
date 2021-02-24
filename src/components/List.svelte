@@ -4,12 +4,9 @@
   export let promise;
   export let list;
   export let clickFunc;
-  export let displayFunc;
-  export let removeFunc;
-  export let hovering;
-  export let description;
   export let side;
   export let displayDescription;
+  export let title;
 
 </script>
 
@@ -46,10 +43,31 @@ li.select:hover {
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
+  top: -5px;
+  left: 95%;
+}
+
+.select .tooltiptext_small {
+  visibility: hidden;
+  width: 150px;
+  background-color: #e6fff7;
+  color: #666666;
+  text-align: left;
+  padding: 5px 0;
+  border-radius: 6px;
+  
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 95%;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
 .select:hover .tooltiptext {
+  visibility: visible;
+}
+.select:hover .tooltiptext_small {
   visibility: visible;
 }
 </style>
@@ -59,17 +77,20 @@ li.select:hover {
 {:then}
 
 <div style="float:{side}">
+<h2>{@html title}</h2>
 
 {#each list as element}
   <li
     class="select"
     on:click={ () => clickFunc(element) }
-    on:mouseover = { () =>  displayFunc(element) }
-    on:mouseout  = { () =>  removeFunc() }
     >
     {element.name}
     {#if displayDescription == true}
-      <p class="tooltiptext" transition:fade>Description: {@html description}</p>
+      {#if element.description === ""}
+        <p class="tooltiptext_small" transition:fade>No description</p>
+      {:else}
+        <p class="tooltiptext" transition:fade>Description: {@html element.description}</p>
+      {/if}
     {/if}
   </li>
 {/each}

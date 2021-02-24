@@ -13,8 +13,6 @@
   let displayConfig = true;
   let contractButtonLabel = ">";
   let gotAD = "block";
-  let hovering = false;
-  let description = "";
 
   const unsubscribeSelectedAD = storeAD.subscribe(value => {
     selectedApps = value;
@@ -24,16 +22,6 @@
     appDomains = value;
   });
   
-
-  const displayAdDescrition = ( appDomain) => {
-    hovering = true;
-    description = appDomain.description; 
-  }
-
-  const removeAdDescription = () => {
-    hovering = false;
-  }
-
   const processApplicationDomains = (data) => {
     data.data.forEach(appObj => {
       storePossAD.update(appDomains => [...appDomains, { name: appObj.name, 
@@ -102,7 +90,6 @@
 
   const removeApp = (showApp) => {
     storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
-    hovering = false;
   }
 </script>
 
@@ -172,28 +159,21 @@ li.select:hover {
 {/if}
 
 <div style="float:left; width:100%">
-
 <List promise = {allAppDomains} 
       list = {appDomains} 
       clickFunc = {addSelectedAppDomain}
-      displayFunc = {displayAdDescrition}
-      removeFunc = {removeAdDescription} 
-      hovering = {hovering}
-      description = {description}
       side = "left"
       displayDescription = {true}
+      title = "Available domains"
 > 
 </List>
 
 <List promise = {allAppDomains}
       list = {selectedApps}
       clickFunc = {removeApp}
-      displayFunc = {displayAdDescrition}
-      removeFunc = {removeAdDescription}
-      hovering = {hovering}
-      description = {description}
-      side = "right"
+      side = "left"
       displayDescription = {false}
+      title = "Selected domains"
 >
 </List>
 

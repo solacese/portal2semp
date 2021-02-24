@@ -9,8 +9,6 @@
   let selectedDomains = [];
   let appInfo = [];
   let applicationData;
-  let description;
-  let hovering = false;
   let selectedApps = [];
   let tagData;
   let tagDetailData;
@@ -108,15 +106,6 @@
     });
   }
 
-  const displayAppDescrition = ( app ) => {
-    hovering = true;
-    description = app.description;
-  }
-
-  const removeAppDescription = () => {
-    hovering = false;
-  }
-
   const addApp = (app) => {
      if (selectedApps.filter(data => (data.name === app.name)).length === 0) {
       storeApp.update(selectedApps => [...selectedApps, app]);
@@ -143,7 +132,6 @@
 
   const removeApp = (showApp) => {
     storeApp.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
-    hovering = false; 
   }
 
   onMount( async() => { dataGot(); } );
@@ -214,24 +202,18 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 <List promise = {gotApps}
       list = {appInfo}
       clickFunc = {addApp}
-      displayFunc = {displayAppDescrition}
-      removeFunc = {removeAppDescription}
-      hovering = {hovering}
-      description = {description}
       side = "left"
       displayDescription = {true}
+      title = "Available Applications"
 >
 </List>
 
 <List promise = {gotApps}
       list = {selectedApps}
       clickFunc = {removeApp}
-      displayFunc = {displayAppDescrition}
-      removeFunc = {removeAppDescription}
-      hovering = {hovering}
-      description = {description}
       side = "right"
       displayDescription = {false}
+      title = "Selected Applications"
 >
 </List>
 </div>
