@@ -13,20 +13,6 @@
   let testList = [];
   let selectedEvents = [];
 
-  const test = async() => {
-    console.log("TESTING");
-    eventIdList = [];
-    eventIdCache = [];
-    selectedApps = [ {
-      consumedEventIds: ["1a2mpvr5zuyj", "1a2mpvr6fmp5"], 
-      description: "a description",
-      name: "A consumer",
-      id: "1a2mpvr5zuxp",
-      persistent: true
-    } ];
-    await getEvents();
-  }
-
   const unsubscribeAppInfo = storeApp.subscribe(value => {
     selectedApps = value;
   });
@@ -55,12 +41,12 @@
 
   const processEvent = async(eventId, event) => {
     if ( eventIdCache.filter( element => (element.id === eventId)).length === 0){
-      eventIdCache.push( {
+      storePossEvents.update( eventIfCache => [...eventIdCache, {
         description: event.data.description,
         name: event.data.name,
         topic: event.data.topicName,
 	id: eventId
-      } );
+      } ] );
     }
   }
 
@@ -121,8 +107,6 @@ li.app {
 <p>State 3: Select your events</p>
 <p>Now we know which consumers you are interested in, you can select which events you want to persist.<p>
 <hr>
-
-<button on:click="{test}">TEST</button>
 
 {#if selectedApps.length > 0}
 

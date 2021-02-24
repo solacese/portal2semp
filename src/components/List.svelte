@@ -70,13 +70,17 @@ li.select:hover {
 .select:hover .tooltiptext_small {
   visibility: visible;
 }
+
+.myborder {
+  margin: 5px;
+}
 </style>
 
 {#await promise}
 <p>... Fetching Data, please wait...</p>
 {:then}
 
-<div style="float:{side}">
+<div class="myborder" style="float:{side}">
 <h2>{@html title}</h2>
 
 {#each list as element}
