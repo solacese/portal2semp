@@ -29,6 +29,29 @@ li.select:hover {
   background-color: #99ff99;
   left: .1em;
 }
+
+.select {
+}
+
+/* Tooltip text */
+.select .tooltiptext {
+  visibility: hidden;
+  width: 600px;
+  background-color: #e6fff7;
+  color: #666666;
+  text-align: left;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.select:hover .tooltiptext {
+  visibility: visible;
+}
 </style>
 
 {#await promise}
@@ -45,17 +68,12 @@ li.select:hover {
     on:mouseout  = { () =>  removeFunc() }
     >
     {element.name}
+    {#if displayDescription == true}
+      <p class="tooltiptext" transition:fade>Description: {@html description}</p>
+    {/if}
   </li>
 {/each}
 </div>
-
-{#if displayDescription == true}
-  {#if hovering}
-    <div style="float:left">
-    <p transition:fade>Description: {@html description}</p>
-    </div>
-  {/if}
-{/if}
 
 {:catch error}
 <p>Error: ${error.message}</p>
