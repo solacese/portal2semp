@@ -1,9 +1,13 @@
 <script>
+  import { onMount } from 'svelte';
+
   import { Link } from 'svelte-routing';
   import { storeApp, storeEvents } from "../stores.js";
 
   let selectedEvents = [];
   let selectedApps = [];
+
+  let qNames = "";
 
   const unsubscribeAppInfo = storeApp.subscribe(value => {
     selectedApps = value;
@@ -12,6 +16,53 @@
   const unsubscribeEvents = storeEvents.subscribe(value => {
     selectedEvents = value;
   } );
+
+  const getEventById = (eventId) => {
+    let eventObj = selectedEvents.filter(event => event.id === eventId);
+    return eventObj[0].name;
+  }
+
+  const test = () => {
+    selectedApps = [ 
+      {
+        description: "a description",
+	id: "1a2mpvr5zuxp",
+	name: "Consumer-1",
+	persistent: true,
+	tagIds: ["1a2mpvr6h0pf", "1a2mpvr6rsl1"],
+	consumedEventIds: ["1a2mpvr5zuyj", "1a2mpvr6fmp5"],
+	qName: "Q_Consumer-1"
+      },
+      {
+        consumedEventIds: ["1a2mpvr5zuyj"],
+        description: "<p>Another consumer</p>",
+        id: "1a2mpvr6fg29",
+        name: "Consumer-2",
+        persistent: true,
+        tagIds: ["1a2mpvr6h0pf"],
+	qName: "Q_Consumer-2"
+      }
+    ];
+    selectedEvents = [
+      {
+        description: "<p><br></p>",
+        id: "1a2mpvr6fmp5",
+        name: "Another Event",
+        topic: "some/topic/space/tbd/yet/another"
+      },
+      {
+        description: "<p>Just a sample event</p>",
+        id: "1a2mpvr5zuyj",
+        name: "Test event",
+        topic: "some/topic/space/tbd/test/event/{event number}"
+      }
+    ];
+  }
+
+  const go = () => {
+    console.log(selectedApps);
+  }
+
 </script>
 
 <style>
@@ -40,11 +91,16 @@ li.event {
   height: 1.0em;
   border-radius: 4px;
 }
+.border {
+  margin: 5px;
+}
 </style>
+<button on:click="{test}">Test</button>
+<button on:click="{go}">Go</button>
 
 {#if selectedEvents.length > 0 && selectedApps.length > 0}
 
-   <div style="float:left">
+   <div class="border" style="float:left">
     {#if selectedApps.length === 1}
       <h2>Selected Application</h2>
     {:else}
@@ -58,7 +114,7 @@ li.event {
     {/each}
   </div>
 
-  <div style="float:left">
+  <div class="border" style="float:left">
     {#if selectedEvents.length === 1}
       <h2>Selected Event</h2>
     {:else}
@@ -69,6 +125,29 @@ li.event {
         class="event"
       > {event.name}
       </li>
+    {/each}
+  </div>
+
+  <div class="border" style="float:left">
+    <h1>Broker Schematic</h1>
+    <p>The artefacts that will be created on the broker</p>
+
+    {#each selectedApps as showApp}
+
+      <div style="border-style: solid">
+      <p style="float:centre">Subscription list:</p>
+      {#each showApp.consumedEventIds as eventId}
+        <li>{@html getEventById(eventId)}</li>
+      {/each}
+      </div>
+
+      <img src = ./images/queue.png>
+
+      <div style="width:100%">
+        <label for={showApp.name}>{showApp.name} queue name:</label>
+        <input style="float:centre" bind:value={showApp.qName} name={showApp.name}>
+      </div>
+
     {/each}
   </div>
 {:else}

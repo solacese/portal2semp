@@ -99,7 +99,8 @@
 	  id: app.id,
 	  name: app.name,
 	  tagIds: "",
-	  persistent: false
+	  persistent: false,
+          qName: "Q_" + app.name
         };
 	appInfo.push(newApp);
       }
