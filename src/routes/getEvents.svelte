@@ -78,8 +78,6 @@
   }
 
   const addSelectedEvent = (event) => {
-    console.log("Got: ", selectedEvents);
-    console.log("Looking for: ", event);
     if (selectedEvents.filter(data => (data.id === event.id)).length === 0) {
       storeEvents.update( selectedEvents => [...selectedEvents, event] )
     }
