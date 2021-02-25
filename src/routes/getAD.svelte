@@ -46,6 +46,11 @@
 
   const addSelectedAppDomain = (appDomain) => {
     if (selectedApps.filter(data => (data.name === appDomain.name)).length === 0) { 
+      // do some initialisation
+      appDomain.qProvisioned = false;
+      appDomain.subsCreated = [];
+      appDomain.qName = "Q_" + appDomain.name;
+      appDomain.qError = "";
       storeAD.update(selectedApps => [...selectedApps, appDomain]);
     }
   }

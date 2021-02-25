@@ -23,7 +23,7 @@
   }
 
   const test = () => {
-    selectedApps = [ 
+    storeApp.update(selectedApps => [ 
       {
         description: "a description",
 	id: "1a2mpvr5zuxp",
@@ -31,7 +31,8 @@
 	persistent: true,
 	tagIds: ["1a2mpvr6h0pf", "1a2mpvr6rsl1"],
 	consumedEventIds: ["1a2mpvr5zuyj", "1a2mpvr6fmp5"],
-	qName: "Q_Consumer-1"
+	qName: "Q_Consumer-1",
+	subsCreated: []
       },
       {
         consumedEventIds: ["1a2mpvr5zuyj"],
@@ -40,10 +41,11 @@
         name: "Consumer-2",
         persistent: true,
         tagIds: ["1a2mpvr6h0pf"],
-	qName: "Q_Consumer-2"
+	qName: "Q_Consumer-2",
+	subsCreated: []
       }
-    ];
-    selectedEvents = [
+    ] );
+    storeEvents.update(selectedEvents => [
       {
         description: "<p><br></p>",
         id: "1a2mpvr6fmp5",
@@ -56,7 +58,7 @@
         name: "Test event",
         topic: "some/topic/space/tbd/test/event/{event number}"
       }
-    ];
+    ] );
   }
 
 </script>
