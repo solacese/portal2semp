@@ -59,10 +59,6 @@
     ];
   }
 
-  const go = () => {
-    console.log(selectedApps);
-  }
-
 </script>
 
 <style>
@@ -96,7 +92,6 @@ li.event {
 }
 </style>
 <button on:click="{test}">Test</button>
-<button on:click="{go}">Go</button>
 
 {#if selectedEvents.length > 0 && selectedApps.length > 0}
 

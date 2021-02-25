@@ -100,7 +100,8 @@
 	  name: app.name,
 	  tagIds: "",
 	  persistent: false,
-          qName: "Q_" + app.name
+          qName: "Q_" + app.name,
+          qProvisioned: false
         };
 	appInfo.push(newApp);
       }
