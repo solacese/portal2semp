@@ -27,15 +27,15 @@
     appInfo = value;
   });
 
-  //const test = () => {
-    //console.log("TESTING");
-    //selectedDomains = [ {
-      //description: "a description",
-      //name: "TF-sample-EP-to-runtime",
-      //id: "1a2mpvr5zuwb"
-    //} ];
-    //dataGot();
-  //}
+  const test = () => {
+    console.log("TESTING");
+    selectedDomains = [ {
+      description: "a description",
+      name: "TF-sample-EP-to-runtime",
+      id: "1a2mpvr5zuwb"
+    } ];
+    dataGot();
+  }
 
   const dataGot = async() => {
     storeAppInfo.update(data => []);
@@ -101,14 +101,18 @@
 	  tagIds: "",
 	  persistent: false,
           qName: "Q_" + app.name,
-          qProvisioned: false
+          qProvisioned: false,
+          subsCreated: [],
+          qError: "",
+          selectedEvents: [],
+          consumedEventDetails: []
         };
 	appInfo.push(newApp);
       }
     });
   }
 
-  const addApp = (app) => {
+  const addApp = (app, context) => {
      if (selectedApps.filter(data => (data.name === app.name)).length === 0) {
       storeApp.update(selectedApps => [...selectedApps, app]);
     }
@@ -132,7 +136,7 @@
     }
   }
 
-  const removeApp = (showApp) => {
+  const removeApp = (showApp, context) => {
     storeApp.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
   }
 
@@ -180,6 +184,7 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 </div>
 
 <div style="float:left; width:100%">
+<button on:click="{test}">Test</button>
 
 <div style="float:left">
 {#if selectedDomains.length > 0 }
@@ -204,16 +209,14 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 <List promise = {gotApps}
       list = {appInfo}
       clickFunc = {addApp}
-      side = "left"
-      displayDescription = {true}
       title = "Available Applications"
+      displayTitle = {true}
 >
 </List>
 
 <List promise = {gotApps}
       list = {selectedApps}
       clickFunc = {removeApp}
-      side = "right"
       displayDescription = {false}
       title = "Selected Applications"
 >

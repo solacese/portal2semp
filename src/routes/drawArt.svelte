@@ -98,33 +98,36 @@ li.event {
 </style>
 <button on:click="{test}">Test</button>
 
-{#if selectedEvents.length > 0 && selectedApps.length > 0}
+{#if selectedApps.length > 0}
 
    <div class="border" style="float:left">
+    <table border="1">
+    <tr><th>
     {#if selectedApps.length === 1}
-      <h2>Selected Application</h2>
+      Selected Application
     {:else}
-      <h2>Selected Applications</h2>
+      Selected Applications
     {/if}
+    </th><th>Selected Events</th>
+    </tr>
     {#each selectedApps as showApp}
+      <tr>
+      <td>
       <li
         class="event"
         > {showApp.name}
       </li>
-    {/each}
-  </div>
+      </td>
 
-  <div class="border" style="float:left">
-    {#if selectedEvents.length === 1}
-      <h2>Selected Event</h2>
-    {:else}
-      <h2>Selected Events</h2>
-    {/if}
-    {#each selectedEvents as event}
-      <li
-        class="event"
-      > {event.name}
-      </li>
+      <td>
+      {#each showApp.selectedEvents as event}
+        <li
+	  class="event"
+	  > {event.name}
+	</li>
+      {/each}
+      </td>
+      </tr>
     {/each}
   </div>
 
@@ -136,7 +139,7 @@ li.event {
 
       <div style="border-style: solid">
       <p style="float:centre">Subscription list:</p>
-      {#each selectedEvents as event}
+      {#each showApp.selectedEvents as event}
         <li>{event.name}</li>
       {/each}
       </div>

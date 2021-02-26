@@ -2,7 +2,7 @@
   // TO DO: associate selected event with consumer
 
   import { onMount } from 'svelte';
-  import { storeApp, storePossEvents, storeEvents } from "../stores.js";
+  import { storeApp, storePossEvents } from "../stores.js";
   import { Link } from "svelte-routing";
   import { fade } from 'svelte/transition';
   import { config } from '../config.js';
@@ -12,7 +12,6 @@
   let eventIdList = [];
   let eventIdCache = [];
   let eventData;
-  let testList = [];
   let selectedEvents = [];
 
   const unsubscribeAppInfo = storeApp.subscribe(value => {
@@ -21,10 +20,6 @@
 
   const unsubscribePossEvents = storePossEvents.subscribe(value => {
     eventIdCache = value;
-  } );
-   
-  const unsubscribeEvents = storeEvents.subscribe(value => {
-    selectedEvents = value;
   } );
    
   const getEvents = async() => {
@@ -38,18 +33,30 @@
         ).then( (x) => x.json() )
          .then( async(y) => await processEvent(eventId, y) )
       )
-    )
+    ).then( async() => await deCacheEvents() );
   }
 
   const processEvent = async(eventId, event) => {
     if ( eventIdCache.filter( element => (element.id === eventId)).length === 0){
-      storePossEvents.update( eventIfCache => [...eventIdCache, {
+      storePossEvents.update( eventIdCache => [...eventIdCache, {
         description: event.data.description,
         name: event.data.name,
         topic: event.data.topicName,
 	id: eventId
       } ] );
     }
+  }
+
+  const deCacheEvents = async() => {
+    // Takes the event cache and fills out the application storage with the
+    //  detailed Event information
+    selectedApps.forEach( app => {
+      app.consumedEventIds.forEach( consumedEventId => {
+        let consumedEventObj = eventIdCache.filter( element => (element.id === consumedEventId) );
+	app.consumedEventDetails.push(consumedEventObj[0]);
+      } );
+    } );
+    storeApp.update( x => x = selectedApps);
   }
 
   const addEventsToGet = () => {
@@ -63,19 +70,24 @@
     } );
   }
 
-  const addSelectedEvent = (event) => {
-    if (selectedEvents.filter(data => (data.id === event.id)).length === 0) {
-      storeEvents.update( selectedEvents => [...selectedEvents, event] )
+  const addSelectedEvent = (event, app) => {
+    if (app.selectedEvents.filter(data => (data.id === event.id)).length === 0) {
+      //storeApp.update( selectedApps.selectedEvents => [...selectedApps.selectedEvents, event] )
+      // ^Parse error?
+      let newEvents = app.selectedEvents.concat(event);
+      app.selectedEvents = newEvents;
+      // ToDo: how to do this properly
+      storeApp.update( x => x = selectedApps);
     }
   }
 
-  const removeSelectedEvent = (event) => {
-    storeEvents.update( selectedEvents => selectedEvents.filter( 
-      data => data.id != event.id
-    ));
+  const removeSelectedEvent = (event, app) => {
+    app.selectedEvents = app.selectedEvents.filter( data => data.id != event.id);
+    // ToDo: how to do this properly
+    storeApp.update( x => x = selectedApps);
   }
 
-  onMount( async() => getEvents() );
+  onMount( async() => await getEvents() );
 </script>
 
 <style>
@@ -113,17 +125,47 @@ li.app {
 {#if selectedApps.length > 0}
 
   <div style="float:left">
+    <table border="1">
+    <tr>
     {#if selectedApps.length === 1}
-      <h2>Selected Application</h2>
+      <th>Selected Application</th>
     {:else}
-      <h2>Selected Applications</h2>
+      <th>Selected Applications</th>
     {/if}
+    <th>Available Events</th>
+    <th>Selected Events</th>
+    </tr>
     {#each selectedApps as showApp}
+      <tr><td>
       <li 
         class="app"
 	> {showApp.name}
       </li>
+      </td>
+      <td>
+      <List promise = {eventData}
+        list = {showApp.consumedEventDetails}
+        clickFunc = {addSelectedEvent}
+        title = "Available Events"
+        displayTitle = {false}
+        context = {showApp}
+         >
+      </List>
+      </td>
+      <td>
+      <List promise = {eventData}
+        list = {showApp.selectedEvents}
+        clickFunc = {removeSelectedEvent}
+        displayDescription = {false}
+        title = "Selected Events"
+        displayTitle = {false}
+        context = {showApp}
+         >
+      </List>
+      </td>
+      </tr>
     {/each}
+    </table>
   </div>
 
 
@@ -132,26 +174,3 @@ li.app {
   <p><strong>You don't appear to have selected any applications!</strong></p>
   <p>Please go back to the <Link to="getApps">previous step</Link> and pick at least one.<p>
 {/if}
-
-
-<div style="float:left">
-<List promise = {eventData}
-      list = {eventIdCache}
-      clickFunc = {addSelectedEvent}
-      side = "left"
-      displayDescription = {true}
-      title = "Available Events"
->
-</List>
-
-<List promise = {eventData}
-      list = {selectedEvents}
-      clickFunc = {removeSelectedEvent}
-      side = "right"
-      displayDescription = {false}
-      title = "Selected Events"
->
-</List>
-
-</div>
-

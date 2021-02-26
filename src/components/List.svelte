@@ -2,11 +2,15 @@
   import { fade } from 'svelte/transition';
 
   export let promise;
-  export let list;
-  export let clickFunc;
-  export let side;
-  export let displayDescription;
-  export let title;
+  export let list = ["First Element", "Second Element"];
+  export let clickFunc = () => { 
+     console.log("List: ", title);
+    }
+  export let side = 'left';
+  export let displayDescription = true;
+  export let title = 'A List';
+  export let displayTitle = true;
+  export let context = "";
 
 </script>
 
@@ -81,12 +85,14 @@ li.select:hover {
 {:then}
 
 <div class="myborder" style="float:{side}">
-<h2>{@html title}</h2>
+{#if displayTitle}
+  <h2>{@html title}</h2>
+{/if}
 
 {#each list as element}
   <li
     class="select"
-    on:click={ () => clickFunc(element) }
+    on:click={ () => clickFunc(element, context) }
     >
     {element.name}
     {#if displayDescription == true}

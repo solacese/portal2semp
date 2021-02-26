@@ -44,14 +44,8 @@
       description: data.data[0].description} ] );
   }
 
-  const addSelectedAppDomain = (appDomain) => {
+  const addSelectedAppDomain = (appDomain, context) => {
     if (selectedApps.filter(data => (data.name === appDomain.name)).length === 0) { 
-      // do some initialisation
-      appDomain.qProvisioned = false;
-      appDomain.subsCreated = [];
-      appDomain.qName = "Q_" + appDomain.name;
-      appDomain.qError = "";
-      appDomain.selectedEventIds = [];
       storeAD.update(selectedApps => [...selectedApps, appDomain]);
     }
   }
@@ -94,7 +88,7 @@
      .then((y) => processApplicationDomains(y));
   };
 
-  const removeApp = (showApp) => {
+  const removeApp = (showApp, context) => {
     storeAD.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
   }
 </script>
@@ -168,8 +162,6 @@ li.select:hover {
 <List promise = {allAppDomains} 
       list = {appDomains} 
       clickFunc = {addSelectedAppDomain}
-      side = "left"
-      displayDescription = {true}
       title = "Available domains"
 > 
 </List>
@@ -177,7 +169,6 @@ li.select:hover {
 <List promise = {allAppDomains}
       list = {selectedApps}
       clickFunc = {removeApp}
-      side = "left"
       displayDescription = {false}
       title = "Selected domains"
 >
