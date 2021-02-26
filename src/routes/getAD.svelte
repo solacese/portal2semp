@@ -51,6 +51,7 @@
       appDomain.subsCreated = [];
       appDomain.qName = "Q_" + appDomain.name;
       appDomain.qError = "";
+      appDomain.selectedEventIds = [];
       storeAD.update(selectedApps => [...selectedApps, appDomain]);
     }
   }

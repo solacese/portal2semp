@@ -1,4 +1,6 @@
 <script>
+  // TO DO: associate selected event with consumer
+
   import { onMount } from 'svelte';
   import { storeApp, storePossEvents, storeEvents } from "../stores.js";
   import { Link } from "svelte-routing";
