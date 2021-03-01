@@ -1,5 +1,6 @@
 <script>
-  // TO DO: associate selected event with consumer
+  // Svelte routes workaround
+  export let location;
 
   import { onMount } from 'svelte';
   import { storeApp, storePossEvents } from "../stores.js";

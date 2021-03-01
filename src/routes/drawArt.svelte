@@ -1,4 +1,7 @@
 <script>
+  // Svelte routes workaround
+  export let location;
+
   import { onMount } from 'svelte';
 
   import { Link } from 'svelte-routing';

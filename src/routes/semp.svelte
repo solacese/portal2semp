@@ -1,4 +1,7 @@
 <script>
+  // Svelte routes workaround
+  export let location;
+
   import { Link } from 'svelte-routing';
   import { fade } from 'svelte/transition';
 
@@ -248,12 +251,12 @@ li.event {
       {:else if showApp.qProvisioned === true}
         <li
 	  class="provisioned"
-          > <img style="max-height:25px" src= ./images/yes.png>
+          > <img style="max-height:25px" src= ./images/yes.png alt="Succeded">
         </li>
       {:else}
         <li 
 	  class="provisioned"
-          > <img style="height:25px" src= ./images/no.png>
+          > <img style="height:25px" src= ./images/no.png alt="failed">
 	  <div class="tooltip">
 	  <p class="tooltiptext" transition:fade>{@html getErrors(showApp)}</p>
 	  </div>

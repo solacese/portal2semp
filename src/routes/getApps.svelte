@@ -1,4 +1,7 @@
 <script>
+  // Svelte routes workaround
+  export let location;
+
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { Link } from "svelte-routing";

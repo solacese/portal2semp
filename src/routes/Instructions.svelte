@@ -1,3 +1,8 @@
+<script>
+  // Svelte Routes bug workaround
+  export let location
+</script>
+
 <div style="width:100%">
 <h1>Instructions</h1>
 

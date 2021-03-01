@@ -1,4 +1,7 @@
 <script>
+  // Svelte routes workaround
+  export let location;
+
   import { fade } from 'svelte/transition';
   import { storeAD } from '../stores.js';
   import { storePossAD } from '../stores.js';
