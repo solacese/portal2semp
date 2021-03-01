@@ -52,8 +52,13 @@
     //  detailed Event information
     selectedApps.forEach( app => {
       app.consumedEventIds.forEach( consumedEventId => {
-        let consumedEventObj = eventIdCache.filter( element => (element.id === consumedEventId) );
-	app.consumedEventDetails.push(consumedEventObj[0]);
+	// Check we haven't already done this
+	if ( app.consumedEventDetails.filter( 
+	       event => (event.id === consumedEventId ) 
+	   ).length === 0 ) {
+          let consumedEventObj = eventIdCache.filter( element => (element.id === consumedEventId) );
+	  app.consumedEventDetails.push(consumedEventObj[0]);
+	}
       } );
     } );
     storeApp.update( x => x = selectedApps);
