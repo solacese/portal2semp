@@ -20,9 +20,6 @@
 
   const getEventById = (eventId) => {
     let eventObj = selectedEvents.filter(event => event.id === eventId);
-    console.log("eventId: ", eventId);
-    console.log("selectedEvents: ", selectedEvents);
-    console.log("this :", eventObj);
     return eventObj[0].name;
   }
 

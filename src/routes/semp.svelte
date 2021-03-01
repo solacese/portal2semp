@@ -73,8 +73,6 @@
     let qsubPost;
     let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
       + "/queues/" + app.qName + "/subscriptions";
-    console.log("Get eventId", event.id, app);
-    console.log("got events", event);
     let topic = event.topic.replace(/(\{.*\})/g, "*");
     let body = makeSempHeader( {
       msgVpnName: config.brokerVpn,
