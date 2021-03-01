@@ -96,23 +96,6 @@
   }
 </script>
 
-<style>
-li.select {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #e6ffe6;
-  margin: .5em;
-  padding: .3em 0;
-  height: 1.0em;
-  border-radius: 4px;
-}
-li.select:hover {
-  color: #607D8B;
-  background-color: #99ff99;
-  left: .1em;
-}
-</style>
 
 <div id="getAD" style="width:100%;display:{gotAD}">
 <div style="width:100%">
@@ -133,21 +116,18 @@ li.select:hover {
 <tr>
 <td><label for="url">Event Portal URL:</label>
 <td> <input bind:value={config.portalUrl} name="url">
-<td>
 <td><label for="appDomId">Application Domain Name:</label>
 <td><input bind:value={config.applicationDomainName} name="appDomId">
 </tr>
 <tr>
 <td><label for="token">Access token:</label>
 <td><input bind:value={config.token} name="token">
-<td align=center width=10%>OR
 </tr>
 <tr>
 <td> <button on:click="{getDomains}">
   Get All Application Domains
 </button>
-<td>
-<td>
+<td align="center">OR
 <td> <button on:click="{getNamedDomains}">Get Named Application Domain</button>
 <td> {config.applicationDomainName} </td>
 </table>

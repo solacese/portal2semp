@@ -61,3 +61,33 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+li.select {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: #f2fff2;
+  margin: .5em;
+  padding: .3em 0;
+  height: 1.0em;
+  border-radius: 4px;
+  border-style: none none none solid;
+  border-width: 7px;
+  border-color: #00ff00;
+}
+li.select:hover {
+  color: #607D8B;
+  background-color: #ccffcc;
+  left: .1em;
+}
+li.selected {
+  position: relative;
+  left: 0;
+  background-color: #fff2f2;
+  margin: .5em; 
+  padding: .3em 0;
+  height: 1.0em; 
+  border-radius: 4px;
+  border-style: none none none solid;
+  border-width: 7px;
+  border-color: #ff0000;
+}

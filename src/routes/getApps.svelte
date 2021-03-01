@@ -147,34 +147,6 @@
 
 </script>
 
-<style>
-li.select {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #e6ffe6;
-  margin: .5em;
-  padding: .3em 0;
-  height: 1.0em;
-  border-radius: 4px;
-}
-li.select:hover {
-  color: #607D8B;
-  background-color: #99ff99;
-  left: .1em;
-}
-li.domain {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #ffe6e6;
-  margin: .5em; 
-  padding: .3em 0;
-  height: 1.0em; 
-  border-radius: 4px;
-}
-</style>
-
 
 <div style="width:100%">
 <p>Stage 2: Select your Applications</p>
@@ -187,7 +159,6 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 </div>
 
 <div style="float:left; width:100%">
-<button on:click="{test}">Test</button>
 
 <div style="float:left">
 {#if selectedDomains.length > 0 }
@@ -197,7 +168,7 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
       <h2>Selected Domains</h2>
     {/if}
     {#each selectedDomains as showDomain}
-      <li class="domain">{showDomain.name}</li>
+      <li class="selected">{showDomain.name}</li>
     {/each}
 
 {:else}

@@ -121,16 +121,6 @@
 </script>
 
 <style>
-li.event {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #ffe6e6;
-  margin: .5em;
-  padding: .3em 0;
-  height: 1.0em;
-  border-radius: 4px;
-}
 .border {
   margin: 5px;
 }
@@ -213,7 +203,7 @@ li.event {
     {#each selectedApps as showApp}
       <tr><td>
       <li
-        class="event"
+        class="selected"
         > {showApp.name}
       </li>
       </td>
@@ -221,7 +211,7 @@ li.event {
       <td>
       {#each showApp.selectedEvents as event}
         <li
-	  class="event"
+	  class="selected"
 	  > {event.name}
 	</li>
       {/each}
@@ -237,7 +227,7 @@ li.event {
     {/if}
     {#each selectedApps as showApp}
       <li
-        class="event"
+        class="selected"
         > {showApp.qName}
       </li>
     {/each}

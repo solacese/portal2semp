@@ -80,31 +80,6 @@
 </script>
 
 <style>
-li.select {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #e6ffe6;
-  margin: .5em;
-  padding: .3em 0;
-  height: 1.0em;
-  border-radius: 4px;
-}
-li.select:hover {
-  color: #607D8B;
-  background-color: #99ff99;
-  left: .1em;
-}
-li.event {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #ffe6e6;
-  margin: .5em;
-  padding: .3em 0;
-  height: 1.0em;
-  border-radius: 4px;
-}
 .border {
   margin: 5px;
 }
@@ -127,7 +102,7 @@ li.event {
       <tr>
       <td>
       <li
-        class="event"
+        class="selected"
         > {showApp.name}
       </li>
       </td>
@@ -135,7 +110,7 @@ li.event {
       <td>
       {#each showApp.selectedEvents as event}
         <li
-	  class="event"
+	  class="selected"
 	  > {event.name}
 	</li>
       {/each}
