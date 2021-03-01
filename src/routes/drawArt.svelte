@@ -84,12 +84,11 @@
   margin: 5px;
 }
 </style>
-<button on:click="{test}">Test</button>
 
 {#if selectedApps.length > 0 && areEvents}
 
    <div class="border" style="float:left">
-    <table border="1">
+    <table>
     <tr><th>
     {#if selectedApps.length === 1 }
       Selected Application

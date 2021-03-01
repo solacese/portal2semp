@@ -103,7 +103,7 @@
 {#if selectedApps.length > 0}
 
   <div style="float:left">
-    <table border="1">
+    <table >
     <tr>
     {#if selectedApps.length === 1}
       <th>Selected Application</th>

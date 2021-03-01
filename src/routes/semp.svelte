@@ -125,32 +125,6 @@
   margin: 5px;
 }
 
-/* Tooltip text */
-
-.provisioned .tooltip {
-  position: relative;
-  display: inline-block;
-}
-.provisioned .tooltiptext {
-  visibility: hidden;
-  width: 600px;
-  background-color: #e6fff7;
-  color: #666666;
-  text-align: left;
-  padding: 5px 0;
-  border-radius: 6px;
-
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
-  z-index: 1;
-  left: 95%;
-}
-/* Show the tooltip text when you mouse over the tooltip container */
-.provisioned:hover .tooltiptext {
-  visibility: visible;
-}
-
-
 </style>
 
 <div style="width:100%">
@@ -191,7 +165,7 @@
 <p> GETTING DATA</p>
 {:then}
    <div class="border" style="float:left">
-    <table border = "1">
+    <table >
     <tr><th>
     {#if selectedApps.length === 1}
       Selected Application
@@ -240,12 +214,12 @@
         <p> ... </p>
       {:else if showApp.qProvisioned === true}
         <li
-	  class="provisioned"
+	  class="tooltip"
           > <img style="max-height:25px" src= ./images/yes.png alt="Succeded">
         </li>
       {:else}
         <li 
-	  class="provisioned"
+	  class="tooltip"
           > <img style="height:25px" src= ./images/no.png alt="failed">
 	  <div class="tooltip">
 	  <p class="tooltiptext" transition:fade>{@html getErrors(showApp)}</p>
