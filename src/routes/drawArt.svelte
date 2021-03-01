@@ -8,6 +8,7 @@
   let selectedApps = [];
 
   let qNames = "";
+  let areEvents = false;
 
   const unsubscribeAppInfo = storeApp.subscribe(value => {
     selectedApps = value;
@@ -23,6 +24,16 @@
     console.log("selectedEvents: ", selectedEvents);
     console.log("this :", eventObj);
     return eventObj[0].name;
+  }
+
+  const checkSelectedEvents = () => {
+    let foundEvents = false;
+    selectedApps.forEach( app => {
+      app.selectedEvents.forEach( event => {
+        foundEvents = true;
+      } );
+    } );
+    return foundEvents;
   }
 
   const test = () => {
@@ -64,6 +75,8 @@
     ] );
   }
 
+  onMount ( () => areEvents = checkSelectedEvents() );
+
 </script>
 
 <style>
@@ -98,12 +111,12 @@ li.event {
 </style>
 <button on:click="{test}">Test</button>
 
-{#if selectedApps.length > 0}
+{#if selectedApps.length > 0 && areEvents}
 
    <div class="border" style="float:left">
     <table border="1">
     <tr><th>
-    {#if selectedApps.length === 1}
+    {#if selectedApps.length === 1 }
       Selected Application
     {:else}
       Selected Applications
