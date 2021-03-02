@@ -8,6 +8,7 @@
   import DrawArt from './routes/drawArt.svelte';
   import Semp from './routes/semp.svelte';
   export let url = "";
+  document.title = "Event Portal 2 Semp";
 </script>
 
 <style>
