@@ -56,12 +56,36 @@ input {
 <Router url="{url}">
 <nav>
 <h1> Portal 2 Semp </h1>
-  <NavLink to="/">Instructions</NavLink>
-  <NavLink to="getAD">1. Application Domains</NavLink>
-  <NavLink to="getApps">2. Applications</NavLink>
-  <NavLink to="getEvents">3. Events</NavLink>
-  <NavLink to="drawArt">4. Check deployment</NavLink>
-  <NavLink to="semp">5. Deploy</NavLink>
+  <NavLink to="/">
+    <img src="./images/instructions.png" 
+			   style="height:25px" 
+			   alt=" ">
+     Instructions</NavLink>
+  <NavLink to="getAD">
+    <img src="./images/ad.png" 
+			   style="height:25px" 
+			   alt=" ">
+    Application Domains</NavLink>
+  <NavLink to="getApps">
+    <img src="./images/app.png" 
+			   style="height:25px" 
+			   alt=" ">
+    Applications</NavLink>
+  <NavLink to="getEvents">
+    <img src="./images/event.png" 
+			   style="height:25px" 
+			   alt=" ">
+    Events</NavLink>
+  <NavLink to="drawArt">
+    <img src="./images/yes.png" 
+			   style="height:25px" 
+			   alt=" ">
+    Check deployment</NavLink>
+  <NavLink to="semp">
+    <img src="./images/deploy.png" 
+			   style="height:25px" 
+			   alt=" ">
+    Deploy</NavLink>
 <hr>
 </nav>
 <div>
