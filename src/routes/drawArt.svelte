@@ -37,6 +37,7 @@
   }
 
   const test = () => {
+    areEvents = true;
     storeApp.update(selectedApps => [ 
       {
         description: "a description",
@@ -46,7 +47,27 @@
 	tagIds: ["1a2mpvr6h0pf", "1a2mpvr6rsl1"],
 	consumedEventIds: ["1a2mpvr5zuyj", "1a2mpvr6fmp5"],
 	qName: "Q_Consumer-1",
-	subsCreated: []
+	subsCreated: [],
+        consumedEventDetails: [
+          {description: "<p><br></p>",
+          id: "1a2mpvr6fmp5",
+          name: "Another Event",
+          topic: "some/topic/space/tbd/yet/another"},
+          {description: "<p>Just a sample event</p>",
+          id: "1a2mpvr5zuyj",
+          name: "Test event",
+          topic: "some/topic/space/tbd/test/event/{event number}"}
+	],
+        selectedEvents: [
+          {description: "<p><br></p>",
+          id: "1a2mpvr6fmp5",
+          name: "Another Event",
+          topic: "some/topic/space/tbd/yet/another"},
+          {description: "<p>Just a sample event</p>",
+          id: "1a2mpvr5zuyj",
+          name: "Test event",
+          topic: "some/topic/space/tbd/test/event/{event number}"}
+	]
       },
       {
         consumedEventIds: ["1a2mpvr5zuyj"],
@@ -56,7 +77,19 @@
         persistent: true,
         tagIds: ["1a2mpvr6h0pf"],
 	qName: "Q_Consumer-2",
-	subsCreated: []
+	subsCreated: [],
+	consumedEventDetails: [
+          {description: "<p>Just a sample event</p>",
+          id: "1a2mpvr5zuyj",
+          name: "Test event",
+          topic: "some/topic/space/tbd/test/event/{event number}"}
+	],
+	selectedEvents: [
+          {description: "<p>Just a sample event</p>",
+          id: "1a2mpvr5zuyj",
+          name: "Test event",
+          topic: "some/topic/space/tbd/test/event/{event number}"}
+	]
       }
     ] );
     storeEvents.update(selectedEvents => [
@@ -87,7 +120,7 @@
 
 {#if selectedApps.length > 0 && areEvents}
 
-   <div class="border" style="float:left">
+   <div style="float:left">
     <table>
     <tr><th>
     {#if selectedApps.length === 1 }
@@ -118,25 +151,32 @@
     {/each}
   </div>
 
-  <div class="border" style="float:left">
+  <div style="float:left">
     <h1>Broker Schematic</h1>
     <p>The artefacts that will be created on the broker</p>
 
     {#each selectedApps as showApp}
+      {#if showApp.selectedEvents.length > 0} 
 
-      <div style="border-style: solid">
-      <p style="float:centre">Subscription list:</p>
-      {#each showApp.selectedEvents as event}
-        <li>{event.name}</li>
-      {/each}
-      </div>
+        <table>
+        <tr>
+        <td>
+        <div style="border-style: solid; float: left">
+        <p style="float:centre">Subscription list:</p>
+        {#each showApp.selectedEvents as event}
+          <li>{event.name}</li>
+        {/each}
+        </div>
+        </td>
 
-      <img src = ./images/queue.png>
-
-      <div style="width:100%">
-        <label for={showApp.name}>{showApp.name} queue name:</label>
-        <input style="float:centre" bind:value={showApp.qName} name={showApp.name}>
-      </div>
+        <td>
+        <div style="width:100%">
+          <label style="position:relative; left:280px;" for={showApp.name}>{showApp.name} queue name:</label>
+          <input style="position:relative; left:-400px; top:40px" bind:value={showApp.qName} name={showApp.name}>
+        <img style="z-index: -1; float:left" src = ./images/queue.png>
+        </div>
+        </td></tr></table>
+        {/if}
 
     {/each}
   </div>

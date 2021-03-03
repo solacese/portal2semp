@@ -1,6 +1,6 @@
 <script>
   // Svelte Routes bug workaround
-  export let location
+  export let location;
 </script>
 
 <div style="width:100%">
