@@ -25,7 +25,9 @@
  const provision = async () => {
    // To Do: catch promise fail and update results
    postSemp = await Promise.all( selectedApps.map( async(app) => {
-     await createQueue(app);
+     await createQueue(app).catch( (err) => {
+       app.qError = err;
+       } );
    } ) );
    provisionAttempted = true;
  }
@@ -121,10 +123,6 @@
 </script>
 
 <style>
-.border {
-  margin: 5px;
-}
-
 </style>
 
 <div style="width:100%">
@@ -228,6 +226,10 @@
       {/if}
     {/each}
   </div>
+{:catch error}
+  <div>
+  <p> Error when contacting broker: {error.message}</p>
+  </div>A
 {/await}
 
 

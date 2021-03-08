@@ -1,8 +1,8 @@
 export let config = {
-  token: "eyJhbGciOiJSUzI1NiIsImtpZCI6Im1hYXNfcHJvZF8yMDIwMDMyNiIsInR5cCI6IkpXVCJ9.eyJvcmciOiJzZWFsbCIsIm9yZ1R5cGUiOiJFTlRFUlBSSVNFIiwic3ViIjoiNjd0cjh0a3VidCIsInBlcm1pc3Npb25zIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUF3QUFNPSIsImFwaVRva2VuSWQiOiIxdHFlZ2M0NzVzMGoiLCJpc3MiOiJTb2xhY2UgQ29ycG9yYXRpb24iLCJpYXQiOjE2MTUyMDU2MDF9.WY_FBjV0XDSXRGgGcg2JxJcwD8ecv4fYIRJ7ZFv6w3p3aoRQPb4mQM8XQt9tUUad8J-UL9U0sdudftLavsJSDX9-vQ2jp2QeIYKDDdbZjiAPW5GuF23sNSnUXHJm53oEZ3_rOcA_JnL2zT-wzzu-feyHeLXcX2qmm4YRqjpkPL0cY2VEnizLJUq8gB3YL2MX_-UPAFjB4Tb5zMesU2Gk1Lq2m9braEGoV8ojfvElpbixwM0_EXeSQekvJ3Z7gpD_XPKRztKRnQu278gUC8tXpiWVA27DK1dgrcSSC4MxzWgqRCSJ73BqM1E9mKBL4ka6KrPiGnPxSe_gUehkmYj25Q",
+  token: "Insert your API token",
   portalUrl: "https://solace.cloud/api/v1/eventPortal/",
   applicationDomainSuffix: "applicationDomains",
-  applicationDomainName: "TF-sample-EP-to-runtime",
+  applicationDomainName: "MT-demo",
   brokerUrl: "http://localhost:8080",
   brokerUsername: "admin",
   brokerPassword: "admin",

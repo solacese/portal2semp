@@ -113,9 +113,6 @@
 </script>
 
 <style>
-.border {
-  margin: 5px;
-}
 </style>
 
 {#if selectedApps.length > 0 && areEvents}

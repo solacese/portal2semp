@@ -15,9 +15,6 @@
 </script>
 
 <style>
-.myborder {
-  margin: 5px;
-}
 </style>
 
 {#await promise}

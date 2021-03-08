@@ -5,11 +5,11 @@
   import { onMount } from 'svelte';
   import { Link } from "svelte-routing";
   import { fade } from 'svelte/transition';
+  
+  import List from '../components/List.svelte';
 
   import { config } from '../config.js';
   import { storeApp, storePossEvents } from "../stores.js";
-
-  import List from '../components/List.svelte';
 
   let selectedApps = [];
   let eventIdList = [];

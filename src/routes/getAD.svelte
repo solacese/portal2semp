@@ -124,14 +124,14 @@
 <div style="width:100%" transition:fade>
 <table>
 <tr>
-<td><label for="url">Event Portal URL:</label>
+<td> <label for="url">Event Portal URL:</label>
 <td> <input bind:value={config.portalUrl} name="url">
-<td><label for="appDomId">Application Domain Name:</label>
-<td><input bind:value={config.applicationDomainName} name="appDomId">
+<td> <label for="appDomId">Application Domain Name:</label>
+<td> <input bind:value={config.applicationDomainName} name="appDomId">
 </tr>
 <tr>
-<td><label for="token">Access token:</label>
-<td><input bind:value={config.token} name="token">
+<td> <label for="token">Access token:</label>
+<td> <input bind:value={config.token} name="token">
 </tr>
 <tr>
 <td> <button on:click="{getDomains}">

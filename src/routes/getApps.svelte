@@ -62,12 +62,10 @@
     } );
     // Now we know which applications are persistent, so let's prune those
     // that aren't
-    let newAppInfo = appInfo.filter(x => (x.persistent === true));
     storeAppInfo.update( x => appInfo.filter(x => (x.persistent === true) ) );
   }
 
   const getApps = async() => {
-    console.log("Get apps");
     applicationData = await Promise.all(
       selectedDomains.map(
         domain => fetch(
@@ -103,7 +101,6 @@
   }
 
   const gotApp = (data) => {
-    console.log("data: ", data);
     data.data.forEach ( app => {
       if (app.consumedEventIds.length > 0) {
         let newApp = { consumedEventIds: app.consumedEventIds,
