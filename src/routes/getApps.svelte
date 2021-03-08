@@ -5,9 +5,13 @@
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { Link } from "svelte-routing";
+
+  import List from '../components/List.svelte';
+  import Pagination from '../components/Pagination.svelte';
+
   import { storeAppInfo, storeAD, storeApp } from '../stores.js';
   import { config } from '../config.js';
-  import List from '../components/List.svelte';
+  import { checkPagination} from '../pagination.js';
 
   let selectedDomains = [];
   let appInfo = [];
@@ -17,6 +21,7 @@
   let tagDetailData;
   let tagIdCache = [];
   let gotApps = false;
+  let pagination = false;
 
   const unsubscribeAD = storeAD.subscribe(value => {
     selectedDomains = value;
@@ -62,12 +67,15 @@
   }
 
   const getApps = async() => {
+    console.log("Get apps");
     applicationData = await Promise.all(
       selectedDomains.map(
         domain => fetch(
 	  config.portalUrl + 'applications?applicationDomainId=' + domain.id,
 	  { headers: { Authorization: config.token } }
 	).then( (x) => x.json() )
+         .then( (data) =>  {pagination = checkPagination(data);
+                            return data; } )
 	 .then( async(y) => await gotApp(y) )
 	 .then( async() => await getTags() )
 	 .then( async() => await getTagDetails() )
@@ -95,6 +103,7 @@
   }
 
   const gotApp = (data) => {
+    console.log("data: ", data);
     data.data.forEach ( app => {
       if (app.consumedEventIds.length > 0) {
         let newApp = { consumedEventIds: app.consumedEventIds,
@@ -180,6 +189,11 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 </div>
 
 <div style="float:left">
+<Pagination paginated = {pagination}
+            title = "Available Applications"
+>
+</Pagination>
+
 <List promise = {gotApps}
       list = {appInfo}
       clickFunc = {addApp}

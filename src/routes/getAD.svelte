@@ -3,10 +3,14 @@
   export let location;
 
   import { fade } from 'svelte/transition';
+
+  import List from '../components/List.svelte';
+  import Pagination from "../components/Pagination.svelte";
+  
   import { storeAD } from '../stores.js';
   import { storePossAD } from '../stores.js';
   import { config } from '../config.js';
-  import List from '../components/List.svelte';
+  import { checkPagination } from '../pagination.js';
 
   let allAppDomains;
   let namedDomainData;
@@ -16,6 +20,7 @@
   let displayConfig = true;
   let contractButtonLabel = ">";
   let gotAD = "block";
+  let pagination = false;
 
   const unsubscribeSelectedAD = storeAD.subscribe(value => {
     selectedApps = value;
@@ -45,6 +50,7 @@
       name: data.data[0].name, 
       id: data.data[0].id, 
       description: data.data[0].description} ] );
+    return data;
   }
 
   const addSelectedAppDomain = (appDomain, context) => {
@@ -73,8 +79,10 @@
 	  Authorization: config.token
 	}
       }
-    ).then((x) => x.json())
-     .then((y) => processNamedAppDomain(y));
+    ).then( (x) => x.json() )
+     .then( (y) => processNamedAppDomain(y) )
+     .then( (data) =>  { pagination = checkPagination(data);
+                         return data; } );
   }
 
   const getDomains = () => {
@@ -87,8 +95,10 @@
             Authorization: config.token
           } 
         }
-    ).then((x) => x.json())
-     .then((y) => processApplicationDomains(y));
+    ).then( (x) => x.json() )
+     .then( (y) => processApplicationDomains(y) )
+     .then( (data) => { pagination = checkPagination(data);
+                        return data; } );
   };
 
   const removeApp = (showApp, context) => {
@@ -142,6 +152,11 @@
 {/if}
 
 <div style="float:left; width:100%">
+<Pagination paginated = {pagination}
+            title = "Application Domains"
+>
+</Pagination>
+
 <List promise = {allAppDomains} 
       list = {appDomains} 
       clickFunc = {addSelectedAppDomain}
