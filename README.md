@@ -42,3 +42,4 @@ Magali Boulet and Tom Fairbairn
 * Proper API paginated response handling.  Currently I just give up and say "I've only got the first page"
 * Work out how to interact with the Svelte "stores" correctly.  store.update([...store, new value]) works really nicely but most cases aren't like that.
 * Log what's being sent to the APIs so users can see, copy and paste (follows the old SolAdmin model where you did something in SolAdmin, then looked in the log to see how to do it in SEMP v1)
+* Event Portal currently doesn't support CORS, so a vanilla browser will barf.
