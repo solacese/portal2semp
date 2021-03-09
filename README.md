@@ -31,3 +31,14 @@ This demo should be run by SEs only: don't give this code to customers.  It has 
 
 ## Authors
 Magali Boulet and Tom Fairbairn
+
+## Libraries used
+
+1. [Svelte](https://svelte.dev/).  A reactive javascript framework that manipulates the DOM directly.  Can be a little rough around the edges but boy the core is good.
+2. Svelte routes.  A quick and dirty choice.  All nav links are dynamic which is annoying because you can't navigate to them directly.
+
+## To dos
+* Clean up the CSS.  It's in a state at the moment
+* Proper API paginated response handling.  Currently I just give up and say "I've only got the first page"
+* Work out how to interact with the Svelte "stores" correctly.  store.update([...store, new value]) works really nicely but most cases aren't like that.
+* Log what's being sent to the APIs so users can see, copy and paste (follows the old SolAdmin model where you did something in SolAdmin, then looked in the log to see how to do it in SEMP v1)
