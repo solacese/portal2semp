@@ -122,9 +122,6 @@
 
 </script>
 
-<style>
-</style>
-
 <div style="width:100%">
 <h1>Create broker artefacts</h1>
 <p>Now we've collected the details of the applications that will consume and the events we need, we'll now send instructions to your broker to create the artefacts needed to do this.</p>

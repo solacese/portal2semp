@@ -14,9 +14,6 @@
 
 </script>
 
-<style>
-</style>
-
 {#await promise}
 <p>... Fetching Data, please wait...</p>
 {:then}

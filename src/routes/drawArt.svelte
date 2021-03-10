@@ -112,9 +112,6 @@
 
 </script>
 
-<style>
-</style>
-
 {#if selectedApps.length > 0 && areEvents}
 
    <div style="float:left">
