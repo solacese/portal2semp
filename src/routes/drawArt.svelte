@@ -170,7 +170,7 @@
         <div style="width:100%">
           <label style="position:relative; left:280px;" for={showApp.name}>{showApp.name} queue name:</label>
           <input style="position:relative; left:-400px; top:40px" bind:value={showApp.qName} name={showApp.name}>
-        <img style="z-index: -1; float:left" src = ./images/queue.png>
+        <img style="z-index: -1; float:left" alt="your queue" src = ./images/queue.png>
         </div>
         </td></tr></table>
         {/if}

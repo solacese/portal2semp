@@ -17,13 +17,6 @@ div {
   list-style-type: none;
   padding: 0;
 }
-li.plain {
-  background-color: #ffffff;
-}
-li.plain:hover {
-  color: #000000;
-  background-color: #ffffff;
-}
 li.select {
   cursor: pointer;
   position: relative;
