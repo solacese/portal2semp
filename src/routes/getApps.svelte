@@ -8,6 +8,7 @@
 
   import List from '../components/List.svelte';
   import Pagination from '../components/Pagination.svelte';
+  import ApiLog from "../components/APILog.svelte";
 
   import { storeAppInfo, storeAD, storeApp } from '../stores.js';
   import { config } from '../config.js';
@@ -22,6 +23,8 @@
   let tagIdCache = [];
   let gotApps = false;
   let pagination = false;
+  let logString = "";
+  let apiLogComponent;
 
   const unsubscribeAD = storeAD.subscribe(value => {
     selectedDomains = value;
@@ -68,7 +71,8 @@
   const getApps = async() => {
     applicationData = await Promise.all(
       selectedDomains.map(
-        domain => fetch(
+        domain => apiLogComponent.apiGet(
+          "Get applications in domain id " + domain.id,
 	  config.portalUrl + 'applications?applicationDomainId=' + domain.id,
 	  { headers: { Authorization: config.token } }
 	).then( (x) => x.json() )
@@ -83,7 +87,8 @@
   
   const getTags = async() => {
     tagData = await Promise.all( appInfo.map(
-      app => fetch(
+      app => apiLogComponent.apiGet(
+        "Get application tags for application id " + app.id,
         config.portalUrl + 'applications/' + app.id + '/tags',
 	{ headers: { Authorization: config.token } }
       ).then( (x) => x.json() )
@@ -131,7 +136,8 @@
     // Go through tag cache and get all the tag details.
     //  Then fill out application info with these details.
     tagDetailData = await Promise.all( tagIdCache.map( 
-      tagId => fetch(
+      tagId => apiLogComponent.apiGet(
+        "Get tag information for tag ID " + tagId.id,
         config.portalUrl + 'tags/' + tagId.id,
 	{ headers: {Authorization: config.token} }
       ).then( (x) => x.json(x) )
@@ -207,6 +213,9 @@ Each Application Domain in Event Portal can contain multiple Applications.  In t
 >
 </List>
 </div>
-      
-
 </div>
+
+<ApiLog title="Event Portal API"
+        logString = {logString}
+        bind:this={apiLogComponent}>
+</ApiLog>

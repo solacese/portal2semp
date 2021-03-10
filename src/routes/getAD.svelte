@@ -6,6 +6,7 @@
 
   import List from '../components/List.svelte';
   import Pagination from "../components/Pagination.svelte";
+  import ApiLog from "../components/APILog.svelte";
   
   import { storeAD } from '../stores.js';
   import { storePossAD } from '../stores.js';
@@ -21,6 +22,8 @@
   let contractButtonLabel = ">";
   let gotAD = "block";
   let pagination = false;
+  let logString = "";
+  let apiLogComponent;
 
   const unsubscribeSelectedAD = storeAD.subscribe(value => {
     selectedApps = value;
@@ -29,7 +32,7 @@
   const unsubscribeAllAD = storePossAD.subscribe(value => {
     appDomains = value;
   });
-  
+
   const processApplicationDomains = (data) => {
     data.data.forEach(appObj => {
       storePossAD.update(appDomains => [...appDomains, { name: appObj.name, 
@@ -72,7 +75,8 @@
   const getNamedDomains = () => {
     selectedApps.length = 0;
     let url = config.portalUrl + config.applicationDomainSuffix + "?name=" + config.applicationDomainName;
-    namedDomainData = fetch(
+    namedDomainData = apiLogComponent.apiGet(
+      "Get named domain " + config.applicationDomainName,
       url,
       {
         headers: {
@@ -88,7 +92,8 @@
   const getDomains = () => {
     appDomains.length = 0;
     let url = config.portalUrl + config.applicationDomainSuffix;
-    allAppDomains = fetch(
+    allAppDomains = apiLogComponent.apiGet(
+        "Get all application domains",
         url,
         {
           headers: {
@@ -173,3 +178,8 @@
 </List>
 
 </div>
+<ApiLog title="Event Portal API"
+        logString={logString}
+	bind:this={apiLogComponent}>
+</ApiLog>
+

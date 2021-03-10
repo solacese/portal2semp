@@ -7,6 +7,7 @@
   import { fade } from 'svelte/transition';
   
   import List from '../components/List.svelte';
+  import ApiLog from "../components/APILog.svelte";
 
   import { config } from '../config.js';
   import { storeApp, storePossEvents } from "../stores.js";
@@ -16,6 +17,8 @@
   let eventIdCache = [];
   let eventData;
   let selectedEvents = [];
+  let apiLogComponent;
+  let logString = "";
 
   const unsubscribeAppInfo = storeApp.subscribe(value => {
     selectedApps = value;
@@ -30,7 +33,8 @@
     addEventsToGet();
     eventData = await Promise.all(
       eventIdList.map(
-        eventId => fetch(
+        eventId => apiLogComponent.apiGet(
+          "Get Event details for id: " + eventId,
           config.portalUrl + 'events/' + eventId,
 	  { headers: { Authorization: config.token } }
         ).then( (x) => x.json() )
@@ -104,7 +108,7 @@
 
 {#if selectedApps.length > 0}
 
-  <div style="float:left">
+  <div style="float:left; width:100%">
     <table >
     <tr>
     {#if selectedApps.length === 1}
@@ -148,7 +152,10 @@
     </table>
   </div>
 
-
+<ApiLog title="Event Portal API"
+        logString={logString}
+        bind:this={apiLogComponent}>
+</ApiLog>
 
 {:else}
   <p><strong>You don't appear to have selected any applications!</strong></p>

@@ -5,14 +5,17 @@
   import { Link } from 'svelte-routing';
   import { fade } from 'svelte/transition';
 
+  import ApiLog from "../components/APILog.svelte";
+
   import { storeApp, storeEvents } from "../stores.js";
   import { config } from '../config.js';
 
   let selectedEvents = [];
   let selectedApps = [];
-
   let postSemp;
   let provisionAttempted = false;
+  let logString = "";
+  let apiLogComponent;
 
   const unsubscribeAppInfo = storeApp.subscribe(value => {
     selectedApps = value;
@@ -52,7 +55,8 @@
       msgVpnName: config.brokerVpn,
       queueName: app.qName 
     } );
-    postSemp = await fetch(
+    postSemp = await apiLogComponent.apiGet(
+      "Create queue " + app.qName,
       url,
       body
     );
@@ -64,7 +68,7 @@
       let json = await postSemp.json();
       app.qError = json.meta.error.description;
     }
-
+ 
     let allSubscribed = await Promise.all( app.selectedEvents.map ( async(event) => {
       let subscribed = await subscribeQueue(app, event)
     } ) );
@@ -84,7 +88,8 @@
       queueName: app.qName,
       subscriptionTopic: topic
     } );
-    qsubPost = await fetch(
+    qsubPost = await apiLogComponent.apiGet(
+      "Create subscription on queue " + app.qName,
       url,
       body
     );
@@ -159,7 +164,7 @@
 {#await postSemp}
 <p> GETTING DATA</p>
 {:then}
-   <div class="border" style="float:left">
+   <div class="border" style="float:left; width:100%">
     <table >
     <tr><th>
     {#if selectedApps.length === 1}
@@ -168,6 +173,12 @@
       Selected Applications
     {/if}
     </th><th>Selected Events</th>
+    {#if selectedApps.length === 1}
+      <h2>Queue</h2>
+    {:else}
+      <th>Queues<th>
+    {/if}
+    <th>Provisioned?<th>
     </tr>
     {#each selectedApps as showApp}
       <tr><td>
@@ -184,27 +195,16 @@
 	  > {event.name}
 	</li>
       {/each}
-      </td></tr>
-    {/each}
-  </div>
+      </td>
+      
+      <td>
+        <li
+          class="selected"
+          > {showApp.qName}
+        </li>
+      </td>
 
-  <div class="border" style="float:left">
-    {#if selectedApps.length === 1}
-      <h2>Queue</h2>
-    {:else}
-      <h2>Queues</h2>
-    {/if}
-    {#each selectedApps as showApp}
-      <li
-        class="selected"
-        > {showApp.qName}
-      </li>
-    {/each}
-  </div>
-
-  <div style="float:left">
-      <h2>Provisioned?</h2>
-    {#each selectedApps as showApp}
+      <td>
       {#if provisionAttempted === false}
         <p> ... </p>
       {:else if showApp.qProvisioned === true}
@@ -221,13 +221,20 @@
 	  </div>
         </li>
       {/if}
+      </td>
+      </tr>
     {/each}
   </div>
 {:catch error}
   <div>
   <p> Error when contacting broker: {error.message}</p>
-  </div>A
+  </div>
 {/await}
+
+<ApiLog title="SEMP v2 API"
+        logString={logString}
+        bind:this={apiLogComponent}>
+</ApiLog>
 
 
 {:else}
