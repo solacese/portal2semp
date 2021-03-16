@@ -48,12 +48,17 @@
   }
 
   const createQueue = async(app) => {
+    // To Do: check queue is created before creating RDP
     // Create the queue first
+    app.qProvisioned = false;
     let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
       + "/queues";
     let body = makeSempHeader({
       msgVpnName: config.brokerVpn,
-      queueName: app.qName 
+      queueName: app.qName,
+      egressEnabled: true,
+      ingressEnabled: true,
+      permission: "consume"
     } );
     postSemp = await apiLogComponent.apiGet(
       "Create queue " + app.qName,
@@ -73,9 +78,90 @@
       let subscribed = await subscribeQueue(app, event)
     } ) );
 
+    if (app.endpoint === "RDP" && app.qProvisioned === true) {
+      console.log("RDP");
+      let createdRDP = await createRDP(app);
+      let createdRestConsumer = await createRestConsumer(app);
+      let createdQBinding = await createQBinding(app);
+    }
+
     // trigger update
     // ToDo:  should be done per SEMP call
     storeApp.update(selectedApps => selectedApps);
+  }
+
+  const createRDP = async(app) => {
+    console.log("RDP semp");
+    let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
+      + "/restDeliveryPoints";
+    let body = makeSempHeader({
+      msgVpnName: config.brokerVpn,
+      enabled: true,
+      restDeliveryPointName: app.rdp.name,
+     } );
+     postSemp = await apiLogComponent.apiGet(
+        "Create RDP " + app.rdp.name,
+        url,
+	body
+     );
+     if (postSemp.ok) {
+       app.qProvisioned = true;
+       app.qError = "";
+     } else {
+       app.qProvisioned = false;
+       let json = await postSemp.json();
+       app.qError = json.meta.error.description;
+     }
+  }
+
+  const createRestConsumer = async(app) => {
+    console.log("RDP  rest consumer semp");
+    let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
+      + "/restDeliveryPoints/" + app.rdp.name + "/restConsumers";
+    let body = makeSempHeader({
+      msgVpnName: config.brokerVpn,
+      enabled: true,
+      remoteHost: app.rdp.host,
+      restConsumerName: app.rdp.name,
+      restDeliveryPointName: app.rdp.name
+     } );
+     postSemp = await apiLogComponent.apiGet(
+        "Create RDP " + app.rdp.name,
+        url,
+        body
+     );
+     if (postSemp.ok) {
+       app.qProvisioned = true;
+       app.qError = "";
+     } else {
+       app.qProvisioned = false;
+       let json = await postSemp.json();
+       app.qError = json.meta.error.description;
+     }
+  }
+  const createQBinding = async(app) => {
+    console.log("RDP  queue binding semp");
+    let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
+      + "/restDeliveryPoints/" + app.rdp.name + "/queueBindings";
+    let body = makeSempHeader({
+      msgVpnName: config.brokerVpn,
+      postRequestTarget: app.rdp.postRequestTarget,
+      queueBindingName: app.qName,
+      restDeliveryPointName: app.rdp.name
+     } );
+     postSemp = await apiLogComponent.apiGet(
+        "Create RDP " + app.rdp.name,
+        url,
+        body
+     );
+     if (postSemp.ok) {
+       app.qProvisioned = true;
+       app.qError = "";
+     } else {
+       app.qProvisioned = false;
+       let json = await postSemp.json();
+       app.qError = json.meta.error.description;
+     }
   }
 
   const subscribeQueue = async(app, event) => {

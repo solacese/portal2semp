@@ -119,7 +119,13 @@
           subsCreated: [],
           qError: "",
           selectedEvents: [],
-          consumedEventDetails: []
+          consumedEventDetails: [],
+          endpoint: "Queue",
+	  rdp: {
+	    name: app.name,
+	    postRequestTarget: "/some/url",
+	    host: "localhost"
+	    }
         };
 	appInfo.push(newApp);
       }

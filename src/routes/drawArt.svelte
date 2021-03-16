@@ -9,6 +9,7 @@
 
   let selectedEvents = [];
   let selectedApps = [];
+  let clientTypes = ['Queue', 'RDP'];
 
   let qNames = "";
   let areEvents = false;
@@ -48,6 +49,7 @@
 	consumedEventIds: ["1a2mpvr5zuyj", "1a2mpvr6fmp5"],
 	qName: "Q_Consumer-1",
 	subsCreated: [],
+	endpoint: 'RDP',
         consumedEventDetails: [
           {description: "<p><br></p>",
           id: "1a2mpvr6fmp5",
@@ -67,7 +69,12 @@
           id: "1a2mpvr5zuyj",
           name: "Test event",
           topic: "some/topic/space/tbd/test/event/{event number}"}
-	]
+	],
+	rdp: {
+	  name: "RDP name",
+	  postRequestTarget: "/some/url",
+	  host: "localhost"
+	}
       },
       {
         consumedEventIds: ["1a2mpvr5zuyj"],
@@ -78,6 +85,7 @@
         tagIds: ["1a2mpvr6h0pf"],
 	qName: "Q_Consumer-2",
 	subsCreated: [],
+	endpoint: 'Queue',
 	consumedEventDetails: [
           {description: "<p>Just a sample event</p>",
           id: "1a2mpvr5zuyj",
@@ -89,7 +97,11 @@
           id: "1a2mpvr5zuyj",
           name: "Test event",
           topic: "some/topic/space/tbd/test/event/{event number}"}
-	]
+	],
+	rdp: {
+	  name: "Another RDP name",
+	  postRequestTarget: "/some/url"
+	}
       }
     ] );
     storeEvents.update(selectedEvents => [
@@ -147,7 +159,7 @@
 
   <div style="float:left">
     <h1>Broker Schematic</h1>
-    <p>The artefacts that will be created on the broker</p>
+    <p>The artefacts that will be created on the broker.  Select whether you would like a queue or a REST Delivery Point (RDP)</p>
 
     {#each selectedApps as showApp}
       {#if showApp.selectedEvents.length > 0} 
@@ -165,9 +177,37 @@
 
         <td>
         <div style="width:100%">
-          <label style="position:relative; left:280px;" for={showApp.name}>{showApp.name} queue name:</label>
-          <input style="position:relative; left:-400px; top:40px" bind:value={showApp.qName} name={showApp.name}>
-        <img style="z-index: -1; float:left" alt="your queue" src = ./images/queue.png>
+          <div style="float:left">
+          {#each clientTypes as type} 
+            <input type=radio bind:group={showApp.endpoint} value={type}>{type}
+	  {/each}
+	  </div>
+
+	  {#if showApp.endpoint === "Queue"}
+	    <div>
+              <label style="position:relative; left:180px; top:55px" for={showApp.name}>{showApp.name} queue name:</label>
+              <input style="position:relative; left:182px; top:75px" bind:value={showApp.qName} name={showApp.name}>
+            <img style="z-index: -1; float:left" alt="your queue" src = ./images/queue.png>
+	    </div>
+
+	  {:else if showApp.endpoint === "RDP"}
+	    <div>
+	      <label style="position:relative; left: 180px;">{showApp.name}</label>
+	      <label style="position:relative; left: 0px; top:40px">Queue Name</label>
+	      <input style="position:relative; left: -505px; top:53px;" size= "6" bind:value={showApp.qName}>
+	      <img style="z-index: -1; float:left" alt="your RDP" src = ./images/RDP.png>
+	      <label style="position:relative; left: -400px; top:-60px">RDP Name:</label>
+	      <input style="position:relative; left: 280px; top:-240px;" size= "10" bind:value={showApp.rdp.name}>
+	      <label style="position:relative; left: 215px; top:-140px">URL target</label>
+	      <input style="position:relative; left: 215px; top:-140px;" size= "10" bind:value={showApp.rdp.postRequestTarget}>
+	      <label style="position:relative; left: 325px; top:-197px">Host</label>
+	      <input style="position:relative; left: 325px; top:-197px;" size= "10" bind:value={showApp.rdp.host}>
+	    </div>
+
+	  {:else}
+	    <h2>Unknown endpoint type</h2>
+	  {/if}
+
         </div>
         </td></tr></table>
         {/if}
