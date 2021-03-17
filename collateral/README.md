@@ -6,7 +6,7 @@ A docker container that runs the demo in a container.  All you have to do is run
 
 ## Instructions
 
-1. Download the tar.gz docker image in this directory
+1. Download the tar.gz docker image (from where TBD).
 2. unzip the image
 3. docker load the image
 4. docker run -p 5000:5000 --name <container-name> portal2semp
