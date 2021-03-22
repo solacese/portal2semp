@@ -76,6 +76,7 @@
     selectedApps.length = 0;
     let url = config.portalUrl + config.applicationDomainSuffix + "?name=" + config.applicationDomainName;
     namedDomainData = apiLogComponent.apiGet(
+      "GET",
       "Get named domain " + config.applicationDomainName,
       url,
       {
@@ -93,6 +94,7 @@
     appDomains.length = 0;
     let url = config.portalUrl + config.applicationDomainSuffix;
     allAppDomains = apiLogComponent.apiGet(
+        "GET",
         "Get all application domains",
         url,
         {

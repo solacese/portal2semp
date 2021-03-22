@@ -61,6 +61,7 @@
       permission: "consume"
     } );
     postSemp = await apiLogComponent.apiGet(
+      "POST",
       "Create queue " + app.qName,
       url,
       body
@@ -100,6 +101,7 @@
       restDeliveryPointName: app.rdp.name,
      } );
      postSemp = await apiLogComponent.apiGet(
+       "POST",
         "Create RDP " + app.rdp.name,
         url,
 	body
@@ -126,6 +128,7 @@
       restDeliveryPointName: app.rdp.name
      } );
      postSemp = await apiLogComponent.apiGet(
+       "POST",
         "Create RDP " + app.rdp.name,
         url,
         body
@@ -150,6 +153,7 @@
       restDeliveryPointName: app.rdp.name
      } );
      postSemp = await apiLogComponent.apiGet(
+       "POST",
         "Create RDP " + app.rdp.name,
         url,
         body
@@ -175,6 +179,7 @@
       subscriptionTopic: topic
     } );
     qsubPost = await apiLogComponent.apiGet(
+      "POST",
       "Create subscription on queue " + app.qName,
       url,
       body

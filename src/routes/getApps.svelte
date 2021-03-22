@@ -72,6 +72,7 @@
     applicationData = await Promise.all(
       selectedDomains.map(
         domain => apiLogComponent.apiGet(
+          "GET",
           "Get applications in domain id " + domain.id,
 	  config.portalUrl + 'applications?applicationDomainId=' + domain.id,
 	  { headers: { Authorization: config.token } }
@@ -88,6 +89,7 @@
   const getTags = async() => {
     tagData = await Promise.all( appInfo.map(
       app => apiLogComponent.apiGet(
+        "GET",
         "Get application tags for application id " + app.id,
         config.portalUrl + 'applications/' + app.id + '/tags',
 	{ headers: { Authorization: config.token } }
@@ -143,6 +145,7 @@
     //  Then fill out application info with these details.
     tagDetailData = await Promise.all( tagIdCache.map( 
       tagId => apiLogComponent.apiGet(
+        "GET",
         "Get tag information for tag ID " + tagId.id,
         config.portalUrl + 'tags/' + tagId.id,
 	{ headers: {Authorization: config.token} }

@@ -2,8 +2,8 @@
   export let title = "API logs";
   export let logString = "";
 
-  export const apiGet = (description, url, options) => {
-    logString += description + " -> GET: " + url + "\n";
+  export const apiGet = (method, description, url, options) => {
+    logString += description + " -> " + method + ": " + url + "\n";
     return fetch(url, options);
   }
 

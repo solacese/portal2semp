@@ -34,6 +34,7 @@
     eventData = await Promise.all(
       eventIdList.map(
         eventId => apiLogComponent.apiGet(
+	  "GET",
           "Get Event details for id: " + eventId,
           config.portalUrl + 'events/' + eventId,
 	  { headers: { Authorization: config.token } }
