@@ -7,7 +7,7 @@
 
   import ApiLog from "../components/APILog.svelte";
 
-  import { storeApp, storeEvents } from "../stores.js";
+  import { storeApp } from "../stores.js";
   import { config } from '../config.js';
 
   let selectedEvents = [];
@@ -21,10 +21,6 @@
     selectedApps = value;
   });
 
-  const unsubscribeEvents = storeEvents.subscribe(value => {
-    selectedEvents = value;
-  } );
-   
  const provision = async () => {
    // To Do: catch promise fail and update results
    postSemp = await Promise.all( selectedApps.map( async(app) => {
@@ -75,8 +71,8 @@
       app.qError = json.meta.error.description;
     }
  
-    let allSubscribed = await Promise.all( app.selectedEvents.map ( async(event) => {
-      let subscribed = await subscribeQueue(app, event)
+    let allSubscribed = await Promise.all( app.subscriptions.map ( async(topic) => {
+      let subscribed = await subscribeQueue(app, topic)
     } ) );
 
     if (app.endpoint === "RDP" && app.qProvisioned === true) {
@@ -142,6 +138,7 @@
        app.qError = json.meta.error.description;
      }
   }
+
   const createQBinding = async(app) => {
     console.log("RDP  queue binding semp");
     let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
@@ -168,11 +165,10 @@
      }
   }
 
-  const subscribeQueue = async(app, event) => {
+  const subscribeQueue = async(app, topic) => {
     let qsubPost;
     let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
       + "/queues/" + app.qName + "/subscriptions";
-    let topic = event.topic.replace(/(\{.*\})/g, "*");
     let body = makeSempHeader( {
       msgVpnName: config.brokerVpn,
       queueName: app.qName,
@@ -280,7 +276,7 @@
       </td>
 
       <td>
-      {#each showApp.selectedEvents as event}
+      {#each showApp.consumedEventDetails as event}
         <li
 	  class="selected"
 	  > {event.name}

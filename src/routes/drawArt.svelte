@@ -5,9 +5,8 @@
   import { onMount } from 'svelte';
 
   import { Link } from 'svelte-routing';
-  import { storeApp, storeEvents } from "../stores.js";
+  import { storeApp } from "../stores.js";
 
-  let selectedEvents = [];
   let selectedApps = [];
   let clientTypes = ['Queue', 'RDP'];
 
@@ -18,109 +17,15 @@
     selectedApps = value;
   });
 
-  const unsubscribeEvents = storeEvents.subscribe(value => {
-    selectedEvents = value;
-  } );
-
-  const getEventById = (eventId) => {
-    let eventObj = selectedEvents.filter(event => event.id === eventId);
-    return eventObj[0].name;
-  }
-
-  const checkSelectedEvents = () => {
-    let foundEvents = false;
-    selectedApps.forEach( app => {
-      app.selectedEvents.forEach( event => {
-        foundEvents = true;
-      } );
+  const checkAreEvents = () => {
+    selectedApps.forEach ( app => {
+      if ( app.consumedEventIds.length > 0) {
+        areEvents = true;
+      }
     } );
-    return foundEvents;
   }
 
-  const test = () => {
-    areEvents = true;
-    storeApp.update(selectedApps => [ 
-      {
-        description: "a description",
-	id: "1a2mpvr5zuxp",
-	name: "Consumer-1",
-	persistent: true,
-	tagIds: ["1a2mpvr6h0pf", "1a2mpvr6rsl1"],
-	consumedEventIds: ["1a2mpvr5zuyj", "1a2mpvr6fmp5"],
-	qName: "Q_Consumer-1",
-	subsCreated: [],
-	endpoint: 'RDP',
-        consumedEventDetails: [
-          {description: "<p><br></p>",
-          id: "1a2mpvr6fmp5",
-          name: "Another Event",
-          topic: "some/topic/space/tbd/yet/another"},
-          {description: "<p>Just a sample event</p>",
-          id: "1a2mpvr5zuyj",
-          name: "Test event",
-          topic: "some/topic/space/tbd/test/event/{event number}"}
-	],
-        selectedEvents: [
-          {description: "<p><br></p>",
-          id: "1a2mpvr6fmp5",
-          name: "Another Event",
-          topic: "some/topic/space/tbd/yet/another"},
-          {description: "<p>Just a sample event</p>",
-          id: "1a2mpvr5zuyj",
-          name: "Test event",
-          topic: "some/topic/space/tbd/test/event/{event number}"}
-	],
-	rdp: {
-	  name: "RDP name",
-	  postRequestTarget: "/some/url",
-	  host: "localhost"
-	}
-      },
-      {
-        consumedEventIds: ["1a2mpvr5zuyj"],
-        description: "<p>Another consumer</p>",
-        id: "1a2mpvr6fg29",
-        name: "Consumer-2",
-        persistent: true,
-        tagIds: ["1a2mpvr6h0pf"],
-	qName: "Q_Consumer-2",
-	subsCreated: [],
-	endpoint: 'Queue',
-	consumedEventDetails: [
-          {description: "<p>Just a sample event</p>",
-          id: "1a2mpvr5zuyj",
-          name: "Test event",
-          topic: "some/topic/space/tbd/test/event/{event number}"}
-	],
-	selectedEvents: [
-          {description: "<p>Just a sample event</p>",
-          id: "1a2mpvr5zuyj",
-          name: "Test event",
-          topic: "some/topic/space/tbd/test/event/{event number}"}
-	],
-	rdp: {
-	  name: "Another RDP name",
-	  postRequestTarget: "/some/url"
-	}
-      }
-    ] );
-    storeEvents.update(selectedEvents => [
-      {
-        description: "<p><br></p>",
-        id: "1a2mpvr6fmp5",
-        name: "Another Event",
-        topic: "some/topic/space/tbd/yet/another"
-      },
-      {
-        description: "<p>Just a sample event</p>",
-        id: "1a2mpvr5zuyj",
-        name: "Test event",
-        topic: "some/topic/space/tbd/test/event/{event number}"
-      }
-    ] );
-  }
-
-  onMount ( () => areEvents = checkSelectedEvents() );
+  onMount( () => checkAreEvents() );
 
 </script>
 
@@ -146,7 +51,7 @@
       </td>
 
       <td>
-      {#each showApp.selectedEvents as event}
+      {#each showApp.consumedEventDetails as event}
         <li
 	  class="selected"
 	  > {event.name}
@@ -162,14 +67,14 @@
     <p>The artefacts that will be created on the broker.  Select whether you would like a queue or a REST Delivery Point (RDP)</p>
 
     {#each selectedApps as showApp}
-      {#if showApp.selectedEvents.length > 0} 
+      {#if showApp.consumedEventDetails.length > 0} 
 
         <table>
         <tr>
         <td>
         <div style="border-style: solid; float: left">
         <p style="float:centre">Subscription list:</p>
-        {#each showApp.selectedEvents as event}
+        {#each showApp.consumedEventDetails as event}
           <li>{event.name}</li>
         {/each}
         </div>

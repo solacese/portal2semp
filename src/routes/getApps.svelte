@@ -18,9 +18,9 @@
   let appInfo = [];
   let applicationData;
   let selectedApps = [];
-  let tagData;
-  let tagDetailData;
-  let tagIdCache = [];
+  let eventDetails = [];
+  let eventIdList = [];
+  let eventData;
   let gotApps = false;
   let pagination = false;
   let logString = "";
@@ -54,18 +54,9 @@
   }
 
   const getData = async() => {
+    eventIdList = [];
     await getApps();
-    appInfo.forEach( app => {
-      app.tagIds.forEach ( tagId => {
-        let cacheLine = tagIdCache.filter(x => (x.id === tagId));
-	if (cacheLine[0].persistent === true) {
-	  app.persistent = true;
-	}
-      });
-    } );
-    // Now we know which applications are persistent, so let's prune those
-    // that aren't
-    storeAppInfo.update( x => appInfo.filter(x => (x.persistent === true) ) );
+    storeAppInfo.update( x => x );
   }
 
   const getApps = async() => {
@@ -79,57 +70,47 @@
 	).then( (x) => x.json() )
          .then( (data) =>  {pagination = checkPagination(data);
                             return data; } )
-	 .then( async(y) => await gotApp(y) )
-	 .then( async() => await getTags() )
-	 .then( async() => await getTagDetails() )
+	 .then( async(y) => await processApp(y) )
+	 .then( async(z) => await getEvents() )
       )
     )
   }
   
-  const getTags = async() => {
-    tagData = await Promise.all( appInfo.map(
-      app => apiLogComponent.apiGet(
-        "GET",
-        "Get application tags for application id " + app.id,
-        config.portalUrl + 'applications/' + app.id + '/tags',
-	{ headers: { Authorization: config.token } }
-      ).then( (x) => x.json() )
-       .then( (y) => addTag(app, y) )
-    ) );
-  }
-
-  const addTag = (app, data) => {
-    app.tagIds = data.data;
-    data.data.forEach( tag => {
-      if ( tagIdCache.filter(element => (element.id === tag)).length === 0) {
-        tagIdCache.push( {id: tag, persistent: false} );
-      } 
-    });
-  }
-
-  const gotApp = (data) => {
+  const processApp = (data) => {
     data.data.forEach ( app => {
-      if (app.consumedEventIds.length > 0) {
-        let newApp = { consumedEventIds: app.consumedEventIds,
-          description: app.description,
-	  id: app.id,
-	  name: app.name,
-	  tagIds: "",
-	  persistent: false,
-          qName: "Q_" + app.name,
-          qProvisioned: false,
-          subsCreated: [],
-          qError: "",
-          selectedEvents: [],
-          consumedEventDetails: [],
-          endpoint: "Queue",
-	  rdp: {
-	    name: app.name,
-	    postRequestTarget: "/some/url",
-	    host: "localhost"
-	    }
-        };
-	appInfo.push(newApp);
+      if (app.endpoints.length > 0) { 
+	app.endpoints.forEach ( endpoint => {
+	  if (endpoint.endpointType === "solaceQueueEndpoint") {
+            let newApp = { 
+              description: app.description,
+	      id: app.id,
+	      name: app.name,
+              qName: endpoint.name,
+              qProvisioned: false,
+              subsCreated: [],
+              qError: "",
+              consumedEventDetails: [],
+	      consumedEventIds: endpoint.consumedEventIds,
+	      subscriptions: endpoint.topicSubscriptions,
+              endpoint: "Queue",
+	      rdp: {
+	        name: app.name,
+	        postRequestTarget: "/some/url",
+	        host: "localhost"
+	        }
+            };
+	    // Get Event details
+	    endpoint.consumedEventIds.forEach( eventId => {
+	      // Only add eventId if we haven't already
+	      if ( eventIdList.indexOf(eventId) === -1 ) {
+	        eventIdList.push(eventId);
+              }
+	    } );
+	    appInfo.push(newApp);
+	  } else {
+	    console.log("Uknown endpoint type: ", endpoint.endpointType);
+	  }
+	});
       }
     });
   }
@@ -138,30 +119,46 @@
      if (selectedApps.filter(data => (data.name === app.name)).length === 0) {
       storeApp.update(selectedApps => [...selectedApps, app]);
     }
-  }
-
-  const getTagDetails = async() => {
-    // Go through tag cache and get all the tag details.
-    //  Then fill out application info with these details.
-    tagDetailData = await Promise.all( tagIdCache.map( 
-      tagId => apiLogComponent.apiGet(
-        "GET",
-        "Get tag information for tag ID " + tagId.id,
-        config.portalUrl + 'tags/' + tagId.id,
-	{ headers: {Authorization: config.token} }
-      ).then( (x) => x.json(x) )
-       .then( (y) => processTagDetails(y, tagId)  )
-    ));
-  }
-
-  const processTagDetails = (data, tagCacheLine) => {
-    if (data.data.name === "PERSISTENT") {
-      tagCacheLine.persistent = true;
-    }
+    console.log(selectedApps);
   }
 
   const removeApp = (showApp, context) => {
     storeApp.update(selectedApps => selectedApps.filter(data => data.name!=showApp.name));
+  }
+
+  const getEvents = async() => {
+    eventData = await Promise.all(
+      eventIdList.map(
+        eventId => apiLogComponent.apiGet(
+          "GET",
+          "Get Event details for id: " + eventId,
+          config.portalUrl + 'events/' + eventId,
+          { headers: { Authorization: config.token } }
+        ).then( (x) => x.json() )
+         .then( async(y) => await processEvent(eventId, y) )
+      )
+    ).then( async() => await deCacheEvents() );
+  }
+
+   const processEvent = async(eventId, event) => {
+     eventDetails.push( {
+       description: event.data.description,
+       name: event.data.name,
+       topic: event.data.topicName,
+       id: eventId
+     } );
+  }
+
+  const deCacheEvents = async() => {
+    // We've got the event details, now go through the apps and fill them out with the event details
+    appInfo.forEach( app => {
+      app.consumedEventIds.forEach( consumedEventId => {
+        if ( app.consumedEventDetails.filter( event => ( event.id === consumedEventId )).length === 0 ) {
+	  let consumedEventObj = eventDetails.filter( element => (element.id === consumedEventId) );
+	  app.consumedEventDetails.push(consumedEventObj[0]);
+	}
+      } );
+    } );
   }
 
   onMount( async() => { dataGot(); } );
