@@ -4,7 +4,6 @@
   import Instructions from "./routes/Instructions.svelte";
   import GetAD from './routes/getAD.svelte';
   import GetApps from './routes/getApps.svelte';
-  import GetEvents from './routes/getEvents.svelte';
   import DrawArt from './routes/drawArt.svelte';
   import Semp from './routes/semp.svelte';
   export let url = "";
@@ -44,11 +43,6 @@ input {
 			   style="height:25px" 
 			   alt=" ">
     Applications</NavLink>
-  <NavLink to="getEvents">
-    <img src="./images/event.png" 
-			   style="height:25px" 
-			   alt=" ">
-    Events</NavLink>
   <NavLink to="drawArt">
     <img src="./images/yes.png" 
 			   style="height:25px" 
@@ -65,7 +59,6 @@ input {
   <Route path="/" component="{Instructions}" />
   <Route path="getAD" component="{GetAD}" />
   <Route path="getApps" component="{GetApps}" />
-  <Route path="getEvents" component="{GetEvents}" />
   <Route path="drawArt" component="{DrawArt}" />
   <Route path="semp" component="{Semp}" />
 </div>

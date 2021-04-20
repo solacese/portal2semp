@@ -119,7 +119,6 @@
      if (selectedApps.filter(data => (data.name === app.name)).length === 0) {
       storeApp.update(selectedApps => [...selectedApps, app]);
     }
-    console.log(selectedApps);
   }
 
   const removeApp = (showApp, context) => {

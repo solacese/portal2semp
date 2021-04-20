@@ -10,7 +10,6 @@
   import { storeApp } from "../stores.js";
   import { config } from '../config.js';
 
-  let selectedEvents = [];
   let selectedApps = [];
   let postSemp;
   let provisionAttempted = false;
@@ -22,11 +21,19 @@
   });
 
  const provision = async () => {
-   // To Do: catch promise fail and update results
+   // ToDo:  Need to separate RDP and queue errors.  currently, RDP creation
+   //  Success causes success report, even if queue creation failed.
+   provisionAttempted = false;
    postSemp = await Promise.all( selectedApps.map( async(app) => {
      await createQueue(app).catch( (err) => {
        app.qError = err;
        } );
+     
+      if (app.endpoint === "RDP") {
+        await createRDP(app).catch( (err) => { app.qError = err; } );
+        await createRestConsumer(app).catch( (err) => { app.qError = err; } );
+        await createQBinding(app).catch( (err) => { app.qError = err; } );
+      }
    } ) );
    provisionAttempted = true;
  }
@@ -65,30 +72,23 @@
     if (postSemp.ok) {
       app.qProvisioned = true;
       app.qError = "";
+
+      let allSubscribed = await Promise.all( app.subscriptions.map ( async(topic) => {
+        let subscribed = await subscribeQueue(app, topic)
+      } ) );
+
     } else {
       app.qProvisioned = false;
       let json = await postSemp.json();
       app.qError = json.meta.error.description;
     }
  
-    let allSubscribed = await Promise.all( app.subscriptions.map ( async(topic) => {
-      let subscribed = await subscribeQueue(app, topic)
-    } ) );
-
-    if (app.endpoint === "RDP" && app.qProvisioned === true) {
-      console.log("RDP");
-      let createdRDP = await createRDP(app);
-      let createdRestConsumer = await createRestConsumer(app);
-      let createdQBinding = await createQBinding(app);
-    }
-
     // trigger update
     // ToDo:  should be done per SEMP call
     storeApp.update(selectedApps => selectedApps);
   }
 
   const createRDP = async(app) => {
-    console.log("RDP semp");
     let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
       + "/restDeliveryPoints";
     let body = makeSempHeader({
@@ -113,7 +113,6 @@
   }
 
   const createRestConsumer = async(app) => {
-    console.log("RDP  rest consumer semp");
     let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
       + "/restDeliveryPoints/" + app.rdp.name + "/restConsumers";
     let body = makeSempHeader({
@@ -140,7 +139,6 @@
   }
 
   const createQBinding = async(app) => {
-    console.log("RDP  queue binding semp");
     let url = config.brokerUrl + "/SEMP/v2/config/msgVpns/" + config.brokerVpn
       + "/restDeliveryPoints/" + app.rdp.name + "/queueBindings";
     let body = makeSempHeader({
