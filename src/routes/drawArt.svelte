@@ -97,16 +97,16 @@
 
 	  {:else if showApp.endpoint === "RDP"}
 	    <div>
-	      <label style="position:relative; left: 180px;">{showApp.name}</label>
-	      <label style="position:relative; left: 0px; top:40px">Queue Name</label>
-	      <input style="position:relative; left: -505px; top:53px;" size= "6" bind:value={showApp.qName}>
+	      <label style="position:relative; left: 180px;" for={showApp.qName}>{showApp.name}</label>
+	      <label style="position:relative; left: 0px; top:40px" for={showApp.qName}>Queue Name</label>
+	      <input style="position:relative; left: -505px; top:53px;" size= "6" bind:value={showApp.qName} name={showApp.qName}>
 	      <img style="z-index: -1; float:left" alt="your RDP" src = ./images/RDP.png>
-	      <label style="position:relative; left: -400px; top:-60px">RDP Name:</label>
-	      <input style="position:relative; left: 280px; top:-240px;" size= "10" bind:value={showApp.rdp.name}>
-	      <label style="position:relative; left: 215px; top:-140px">URL target</label>
-	      <input style="position:relative; left: 215px; top:-140px;" size= "10" bind:value={showApp.rdp.postRequestTarget}>
-	      <label style="position:relative; left: 325px; top:-197px">Host</label>
-	      <input style="position:relative; left: 325px; top:-197px;" size= "10" bind:value={showApp.rdp.host}>
+	      <label style="position:relative; left: -400px; top:-60px" for={showApp.rdp.name}>RDP Name:</label>
+	      <input style="position:relative; left: 280px; top:-240px;" size= "10" bind:value={showApp.rdp.name} name={showApp.rdp.name}>
+	      <label style="position:relative; left: 215px; top:-140px" for={showApp.rdp.postRequestTarget}>URL target</label>
+	      <input style="position:relative; left: 215px; top:-140px;" size= "10" bind:value={showApp.rdp.postRequestTarget} name={showApp.rdp.postRequestTarget}>
+	      <label style="position:relative; left: 325px; top:-197px" for={showApp.rdp.host}>Host</label>
+	      <input style="position:relative; left: 325px; top:-197px;" size= "10" bind:value={showApp.rdp.host} name={showApp.rdp.host}>
 	    </div>
 
 	  {:else}
