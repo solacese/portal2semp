@@ -16,9 +16,6 @@ div {
   list-style-type: none;
   padding: 0;
 }
-input {
-  float: right;
-}
 </style>
 
 <header>

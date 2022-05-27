@@ -1,6 +1,6 @@
 <script>
   // Svelte routes workaround
-  export let location;
+  export const location=0;
 
   import { Link } from 'svelte-routing';
   import { fade } from 'svelte/transition';
